@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <div v-if="isLoggedIn">
-      <h1>Dashboard</h1>
+      <h1>Dashboard {{ id }}</h1>
     </div>
     <div v-else>
       <h1>HomePage</h1>
@@ -17,7 +17,10 @@ export default {
       msg: 'Home Page'
     }
   },
-  props: ['isLoggedIn']
+  props: [
+    'isLoggedIn',
+    'id'
+    ]
 }
 </script>
 

@@ -9,7 +9,7 @@
         </section>
 
         <section id='login' v-if="checkLogin">
-          
+                  
           <section id="searchform">
             <!-- <form> -->
               <label for="search">Search</label>
@@ -25,7 +25,7 @@
 
         </section>
         <section id='login' v-else>
-          
+
           <form id="loginform">
                 
             <label for="userid">UserId</label>
@@ -43,7 +43,7 @@
         
       </section>
       
-      <router-view v-bind:is-logged-in="isLoggedIn"></router-view>
+      <router-view v-bind:is-logged-in="isLoggedIn" v-bind:id="id"></router-view>
       
       <div id='menu-outer'>
         
@@ -78,49 +78,72 @@ export default {
   },
   methods: {
     async getUserInfo () {
-    
-      var authentication = false;
+      var authentication = false
       try {
-      const response = await axios.get(`http://localhost:3000/api/getUserById`, {
-        params: {
-          userid: this.userid,
-          password: this.password
-        }
-      })
+        const response = await axios.get(`http://localhost:3000/api/getUserById`, {
+          params: {
+            userid: this.userid,
+            password: this.password
+          }
+        })
 
-      // .then(response => {
-        
-      //  this.posts = response.data
-      console.log('1au: ' + authentication)
-      console.log('posts: ' + JSON.stringify(response.data.status))
-        if (JSON.stringify(response.data.status) == 'success') {
-          authentication = true;
+        console.log('1au: ' + authentication)
+        console.log('status: ' + JSON.stringify(response.data.status))
+        console.log('id: ' + JSON.stringify(response.data.id))
+        if (response.data.status == 'success') {
+          authentication = true
+          this.id = response.data.id
         }
         console.log('2au: ' + authentication)
-      // })
-      }
-      catch(e) {
+        return authentication
+      } catch (e) {
         this.errors.push(e)
       }
-      return authentication
+    },
+    async getUserOrEmailInfo () {
+      if (this.userid.match('@')) {
+        return axios.get(`http://localhost:3000/api/getUserByEmail`, {
+          params: {
+            email: this.userid,
+            password: this.password
+          }
+        })
+      } else {
+        return axios.get(`http://localhost:3000/api/getUserById`, {
+          params: {
+            userid: this.userid,
+            password: this.password
+          }
+        })
+      }
     },
     tryLogin: function () {
-      var authentication = false;
-      this.getUserInfo().then(response => {
-        console.log('3au: ' + authentication)
-        authentication = response;
+      var authentication = false
+      this.getUserOrEmailInfo().then(response => {
+        console.log('1au: ' + authentication)
+        console.log('status: ' + JSON.stringify(response.data.status))
+        console.log('id: ' + JSON.stringify(response.data.id))
+        if (response.data.status == 'success') {
+          authentication = true
+          this.id = response.data.id
+        }
+        console.log('2au: ' + authentication)
+        console.log('4au: ' + authentication)
+        if (authentication) {
+          this.$cookie.set('userid', this.userid, 1)
+          this.$cookie.set('password', this.password, 1)
+          this.isLoggedIn = true
+        } else {
+          this.$cookie.set('userid', '', 1)
+          this.$cookie.set('password', '', 1)
+          this.isLoggedIn = false
+          this.password = ''
+          this.id = ''
+        }
+        return this.isLoggedIn
+      }).catch(e => {
+        this.errors.push(e)
       })
-      console.log('4au: ' + authentication)
-      if (authentication) {
-        this.$cookie.set('userid', this.userid, 1)
-        this.$cookie.set('password', this.password, 1)
-        this.isLoggedIn = true
-      } else {
-        this.$cookie.set('userid', '', 1)
-        this.$cookie.set('password', '', 1)
-        this.isLoggedIn = false
-      }
-      return this.isLoggedIn
     },
     signIn: function (event) {
       event.preventDefault()
@@ -133,33 +156,37 @@ export default {
       this.$cookie.delete('password')
       console.log('signout = ' + this.userid + ',' + this.password)
       this.isLoggedIn = false
-      this.userid = ''
+      // this.userid = ''
       this.password = ''
+      this.id = ''
     },
     checkCookie: function () {
       console.log('checkCookie = ' + this.isLoggedIn + this.$cookie.get('userid') + ',' + this.$cookie.get('password'))
       if (!this.isLoggedIn && this.$cookie.get('userid') && this.$cookie.get('password')) {
         this.userid = this.$cookie.get('userid')
         this.password = this.$cookie.get('password')
-        if (!this.tryLogin()) {
-          this.userid = ''
-          this.password = ''
-        }
+        this.tryLogin()
+        // if (!this.tryLogin()) {
+          // this.userid = ''
+          // this.password = ''
+        // }
       } else if ((this.isLoggedIn && (!this.$cookie.get('userid') || !this.$cookie.get('password')))) {
         console.log('Logout')
         this.$cookie.delete('userid')
         this.$cookie.delete('password')
         console.log('signout = ' + this.userid + ',' + this.password)
         this.isLoggedIn = false
-        this.userid = ''
+        // this.userid = ''
         this.password = ''
+        this.id = ''
       } else if ((this.isLoggedIn && (this.$cookie.get('userid') != this.userid || this.$cookie.get('password') != this.password))) {
         this.userid = this.$cookie.get('userid')
         this.password = this.$cookie.get('password')
-        if (!this.tryLogin()) {
-          this.userid = ''
-          this.password = ''
-        }
+        this.tryLogin()
+        // if (!this.tryLogin()) {
+          // this.userid = ''
+          // this.password = ''
+        // }
       }
     }
   },
