@@ -64,18 +64,54 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'app',
   data () {
     return {
       isLoggedIn: false,
       userid: '',
-      password: ''
+      password: '',
+      id: '',
+      errors: []
     }
   },
   methods: {
+    async getUserInfo () {
+    
+      var authentication = false;
+      try {
+      const response = await axios.get(`http://localhost:3000/api/getUserById`, {
+        params: {
+          userid: this.userid,
+          password: this.password
+        }
+      })
+
+      // .then(response => {
+        
+      //  this.posts = response.data
+      console.log('1au: ' + authentication)
+      console.log('posts: ' + JSON.stringify(response.data.status))
+        if (JSON.stringify(response.data.status) == 'success') {
+          authentication = true;
+        }
+        console.log('2au: ' + authentication)
+      // })
+      }
+      catch(e) {
+        this.errors.push(e)
+      }
+      return authentication
+    },
     tryLogin: function () {
-      if (this.userid == 'rajan' && this.password == 'garg') {
+      var authentication = false;
+      this.getUserInfo().then(response => {
+        console.log('3au: ' + authentication)
+        authentication = response;
+      })
+      console.log('4au: ' + authentication)
+      if (authentication) {
         this.$cookie.set('userid', this.userid, 1)
         this.$cookie.set('password', this.password, 1)
         this.isLoggedIn = true
