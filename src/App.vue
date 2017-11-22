@@ -1,8 +1,7 @@
 <template>
   <div id="app">
 
-    <div id='container' v-cloak v-bind="checkCookie()">
-
+    <div id='container' v-cloak v-bind="checkCookie()" v-on:click="checkCookie">
       <section class='header'>
         <section>
           <h1 id='logo'><router-link :to="{ name: 'Home' }">KNOTRA</router-link></h1>
