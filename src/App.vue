@@ -141,10 +141,12 @@ export default {
         if (authentication) {
           this.$cookie.set('userid', this.userid, 1)
           this.$cookie.set('password', this.password, 1)
+          this.$cookie.set('id', this.id, 1)
           this.isLoggedIn = true
         } else {
-          this.$cookie.set('userid', '', 1)
-          this.$cookie.set('password', '', 1)
+          this.$cookie.delete('userid')
+          this.$cookie.delete('password')
+          this.$cookie.delete('id')
           this.isLoggedIn = false
           this.password = ''
           this.id = ''
@@ -165,6 +167,8 @@ export default {
       event.preventDefault()
       this.$cookie.delete('userid')
       this.$cookie.delete('password')
+      this.$cookie.delete('id')
+
       console.log('signout = ' + this.userid + ',' + this.password)
       this.isLoggedIn = false
       // this.userid = ''
