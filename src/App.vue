@@ -11,14 +11,15 @@
         <section id='login' v-if="checkLogin">
                   
           <section id="searchform">
-            <!-- <form> -->
-              <label for="search">Search</label>
-              <input type="text" class="search-control" id="search" required tabindex="1" placeholder="search">
+            <!-- <form>
+              <label for="search">Search</label> -->
+              <input type="text" class="search-control" id="search" required tabindex="1" placeholder="search" v-model="searchQuery" @keyup.enter="search">
             <!-- </form> -->
           </section>
 
           <section id='logout'>
               <form id="logoutform">
+                <button tabindex="1" id="profile-submit" type="submit" class="btn btn-success" @click="showProfile">Profile</button>
                 <button tabindex="1" id="logout-submit" type="submit" class="btn btn-success" @click="signOut">Logout</button>
               </form>
           </section>
@@ -73,10 +74,16 @@ export default {
       userid: '',
       password: '',
       id: '',
-      errors: []
+      errors: [],
+      searchQuery: ''
     }
   },
   methods: {
+    search: function (event) {
+      event.preventDefault()
+      this.$router.push('/search/' + this.searchQuery)
+      this.searchQuery = ''
+    },
     async getUserInfo () {
       var authentication = false
       try {
@@ -126,6 +133,9 @@ export default {
         if (response.data.status == 'success') {
           authentication = true
           this.id = response.data.id
+          if (this.userid.match('@')) {
+            this.userid = response.data.userid
+          }
         }
         console.log('2au: ' + authentication)
         console.log('4au: ' + authentication)
@@ -139,6 +149,7 @@ export default {
           this.isLoggedIn = false
           this.password = ''
           this.id = ''
+          this.$router.push('/')
         }
         return this.isLoggedIn
       }).catch(e => {
@@ -149,6 +160,7 @@ export default {
       event.preventDefault()
       console.log('signin = ' + this.userid + ',' + this.password)
       this.tryLogin()
+      this.$router.push('/')
     },
     signOut: function (event) {
       event.preventDefault()
@@ -159,6 +171,7 @@ export default {
       // this.userid = ''
       this.password = ''
       this.id = ''
+      this.$router.push('/')
     },
     checkCookie: function () {
       console.log('checkCookie = ' + this.isLoggedIn + this.$cookie.get('userid') + ',' + this.$cookie.get('password'))
@@ -179,6 +192,7 @@ export default {
         // this.userid = ''
         this.password = ''
         this.id = ''
+        this.$router.push('/')
       } else if ((this.isLoggedIn && (this.$cookie.get('userid') != this.userid || this.$cookie.get('password') != this.password))) {
         this.userid = this.$cookie.get('userid')
         this.password = this.$cookie.get('password')
@@ -188,6 +202,10 @@ export default {
           // this.password = ''
         // }
       }
+    },
+    showProfile: function (event) {
+      event.preventDefault()
+      this.$router.push('/profile/' + this.userid)
     }
   },
   computed: {
@@ -226,7 +244,7 @@ export default {
     }
   }
 
-  #logoutform #searchform {
+  #logoutform, #searchform {
     margin: 0px 0 5px 10px;
     text-align: right;
 }
@@ -248,7 +266,7 @@ export default {
     /* border-radius: 2px; */
 }
 
-#logout-submit {
+#logout-submit, #profile-submit {
     line-height: 24px;
     /* color: #fff; */
     color: #d6d9dd;
@@ -257,7 +275,7 @@ export default {
     display: inline-block;
     width: auto;
     height: 32px;
-    margin: 10px 0 0;
+    margin: 10px 10px 0 10px;
     padding: 0 20px;
     background-color: transparent;
     /* border: 1px solid #fff; */
@@ -282,7 +300,7 @@ export default {
 }
 
 .header #login #logout {
-    width: 70%;
+    width: 65%;
     float: right;
 }
 

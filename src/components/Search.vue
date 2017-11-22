@@ -1,25 +1,19 @@
 <template>
   <div class="hello">
-    <div v-if="isLoggedIn">
-      <h1>Dashboard {{ id }}</h1>
-    </div>
-    <div v-else>
-      <h1>HomePage</h1>
-    </div>
+      <h1>Search {{ query }}</h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Home',
+  name: 'Search',
   data () {
     return {
       msg: 'Home Page'
     }
   },
   props: [
-    'isLoggedIn',
-    'id'
+    'query'
   ]
 }
 </script>

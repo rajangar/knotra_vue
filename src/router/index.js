@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import About from '@/components/About'
+import Search from '@/components/Search'
+import Profile from '@/components/Profile'
 import PageNotFound from '@/components/PageNotFound'
 
 Vue.use(Router)
@@ -19,6 +21,18 @@ export default new Router({
       path: '/about',
       name: 'About',
       component: About
+    },
+    {
+      path: '/search/:query',
+      name: 'Search',
+      component: Search,
+      props: true
+    },
+    {
+      path: '/profile/:userid',
+      name: 'Profile',
+      component: Profile,
+      props: true
     },
     {
       path: '**',
