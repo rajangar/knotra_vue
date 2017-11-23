@@ -1,10 +1,10 @@
 <template>
   <div id="app">
 
-    <div id='container' v-cloak v-bind="checkCookie()" v-on:click="checkCookie">
+    <div id='container' v-cloak v-bind="checkCookie()">
       <section class='header'>
         <section>
-          <h1 id='logo'><router-link :to="{ name: 'Home' }">KNOTRA</router-link></h1>
+          <h1 id='logo' v-on:click="checkCookie"><router-link :to="{ name: 'Home' }">KNOTRA</router-link></h1>
         </section>
 
         <section id='login' v-if="checkLogin">
@@ -49,9 +49,9 @@
         
         <div class='table'>
           <ul id='horizontal-list'>
-            <li><router-link :to="{ name: 'Home' }">Home</router-link></li>
-            <li><router-link to="/about">About</router-link></li>
-            <li><router-link to="/contact">Contact</router-link></li>
+            <li v-on:click="checkCookie"><router-link :to="{ name: 'Home' }">Home</router-link></li>
+            <li v-on:click="checkCookie"><router-link to="/about">About</router-link></li>
+            <li v-on:click="checkCookie"><router-link to="/contact">Contact</router-link></li>
           </ul>
         </div>
         
