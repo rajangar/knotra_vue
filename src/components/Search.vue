@@ -1,20 +1,35 @@
 <template>
   <div class="hello">
       <h1>Search {{ query }}</h1>
+      <h1> {{ searchString }} </h1>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Search',
   data () {
     return {
-      msg: 'Home Page'
+      searchString: [],
+      errors: []
     }
   },
   props: [
     'query'
-  ]
+  ],
+  created () {
+    axios.get(`http://localhost:3000/api/getSearchFromProfile`, {
+      params: {
+        query: this.query
+      }
+    }).then(response => {
+      this.searchString = JSON.stringify(response.data)
+      console.log('3-searchString: ' + this.searchString)
+    }).catch(e => {
+      this.errors.push(e)
+    })
+  }
 }
 </script>
 
