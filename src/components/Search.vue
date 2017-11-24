@@ -16,19 +16,40 @@ export default {
     }
   },
   props: [
-    'query'
+    'query',
+    'id'
   ],
   created () {
+    if (this.id == '' && this.$cookie.get('userid') && this.$cookie.get('password') &&
+    this.$cookie.get('id')) {
+      this.id = this.$cookie.get('id')
+    }
     axios.get(`http://localhost:3000/api/getSearchFromProfile`, {
       params: {
-        query: this.query
+        query: this.query,
+        id: this.id
       }
     }).then(response => {
       this.searchString = JSON.stringify(response.data)
-      console.log('3-searchString: ' + this.searchString)
+      console.log('4-searchString: ' + this.searchString)
     }).catch(e => {
       this.errors.push(e)
     })
+  },
+  watch: {
+    query: function (val) {
+      axios.get(`http://localhost:3000/api/getSearchFromProfile`, {
+        params: {
+          query: this.query,
+          id: this.id
+        }
+      }).then(response => {
+        this.searchString = JSON.stringify(response.data)
+        console.log('3-searchString: ' + this.searchString)
+      }).catch(e => {
+        this.errors.push(e)
+      })
+    }
   }
 }
 </script>

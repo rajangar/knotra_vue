@@ -1,7 +1,10 @@
 <template>
   <div id="app">
 
+  <div v-bind:class="[waiting ? blurClass : '', bkClass]">
+
     <div id='container' v-cloak v-bind="checkCookie()">
+    
       <section class='header'>
         <section>
           <h1 id='logo' v-on:click="checkCookie"><router-link :to="{ name: 'Home' }">KNOTRA</router-link></h1>
@@ -12,7 +15,7 @@
           <section id="searchform">
             <!-- <form>
               <label for="search">Search</label> -->
-              <input type="text" class="search-control" id="search" required tabindex="1" placeholder="search" v-model="searchQuery" @keyup.enter="search">
+              <input type="text" class="search-control" id="search" required tabindex="1" placeholder="search" v-model.lazy="searchQuery" @keyup.enter="search">
             <!-- </form> -->
           </section>
 
@@ -42,8 +45,10 @@
         </section>
         
       </section>
+
+
       
-      <router-view v-bind:is-logged-in="isLoggedIn" v-bind:id="id"></router-view>
+      <router-view v-bind:is-logged-in="isLoggedIn" v-bind:id="id" v-bind:cnt="cnt"></router-view>
       
       <div id='menu-outer'>
         
@@ -60,11 +65,16 @@
       
       </div>
 
+</div>
+<transition name="fade">
+      <wait-circle v-if="waiting" class="modal"></wait-circle>
+      </transition>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import WaitCircle from '@/components/WaitCircle'
 export default {
   name: 'app',
   data () {
@@ -74,8 +84,15 @@ export default {
       password: '',
       id: '',
       errors: [],
-      searchQuery: ''
+      searchQuery: '',
+      cnt: 0,
+      waiting: false,
+      bkClass: 'bk',
+      blurClass: 'blur'
     }
+  },
+  components: {
+    waitCircle: WaitCircle
   },
   methods: {
     search: function (event) {
@@ -124,8 +141,17 @@ export default {
       }
     },
     tryLogin: function () {
+      this.waiting = true
+      console.log('1waiting: ' + this.waiting)
+      setTimeout(function () {
+        console.log('3waiting: ' + this.waiting)
+        this.waiting = false
+        console.log('4waiting: ' + this.waiting)
+      }.bind(this), 5000)
+
       var authentication = false
       this.getUserOrEmailInfo().then(response => {
+        this.waiting = false
         console.log('1au: ' + authentication)
         console.log('status: ' + JSON.stringify(response.data.status))
         console.log('id: ' + JSON.stringify(response.data.id))
@@ -154,11 +180,15 @@ export default {
         }
         return this.isLoggedIn
       }).catch(e => {
+        this.waiting = false
         this.errors.push(e)
       })
     },
     signIn: function (event) {
       event.preventDefault()
+      if (this.waiting) {
+        return
+      }
       console.log('signin = ' + this.userid + ',' + this.password)
       this.tryLogin()
       this.$router.push('/')
@@ -208,7 +238,11 @@ export default {
     },
     showProfile: function (event) {
       event.preventDefault()
-      this.$router.push('/profile/' + this.userid)
+      this.checkCookie()
+      if (this.isLoggedIn) {
+        this.cnt += 1
+        this.$router.push('/profile/' + this.userid)
+      }
     }
   },
   computed: {
@@ -445,6 +479,32 @@ export default {
     color: #d6d9dd;
     margin: 0 10px 0 20px;
     /* box-sizing: border-box; */
+}
+
+.modal {
+  background: transparent;
+  color: black;
+  /* padding: 20px; */
+  /*width: 200px; */
+  position: absolute;
+  margin: 500px 0 0 50%
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.25s ease-out;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.bk {
+  transition: all 0.05s ease-out;
+}
+
+.blur {
+  filter: blur(1px);
+  opacity: 0.4;
 }
 
 </style>
