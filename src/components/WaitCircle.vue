@@ -1,17 +1,12 @@
 <template>
   <div class="hello">
-    <h1>o</h1>
+    <h1><img src="..\assets\circle.gif" /></h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'WaitCircle',
-  data () {
-    return {
-      msg: 'Welcome to WaitCircle Page'
-    }
-  }
+  name: 'WaitCircle'
 }
 </script>
 

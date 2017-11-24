@@ -487,7 +487,7 @@ export default {
   /* padding: 20px; */
   /*width: 200px; */
   position: absolute;
-  margin: 500px 0 0 50%
+  margin: 300px 0 0 50%
 }
 
 .fade-enter-active, .fade-leave-active {
