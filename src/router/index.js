@@ -4,6 +4,7 @@ import Home from '@/components/Home'
 import About from '@/components/About'
 import Search from '@/components/Search'
 import Profile from '@/components/Profile'
+import SignUpPage from '@/components/SignUpPage'
 import PageNotFound from '@/components/PageNotFound'
 
 Vue.use(Router)
@@ -32,6 +33,12 @@ export default new Router({
       path: '/profile/:userid',
       name: 'Profile',
       component: Profile,
+      props: true
+    },
+    {
+      path: '/signuppage/:firstName&:lastName&:email',
+      name: 'SignUpPage',
+      component: SignUpPage,
       props: true
     },
     {

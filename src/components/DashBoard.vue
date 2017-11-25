@@ -6,10 +6,10 @@
 
 <script>
 export default {
-  name: 'PageNotFound',
+  name: 'DashBoard',
   data () {
     return {
-      msg: 'Page not Found'
+      msg: 'Welcome to DashBoard Page'
     }
   }
 }

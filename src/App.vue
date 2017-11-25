@@ -6,7 +6,7 @@
     <div id='container' v-cloak v-bind="checkCookie()">
     
       <section class='header'>
-        <section>
+        <section class='logoSection'>
           <h1 id='logo' v-on:click="checkCookie"><router-link :to="{ name: 'Home' }">KNOTRA</router-link></h1>
         </section>
 
@@ -27,15 +27,17 @@
           </section>
 
         </section>
+
         <section id='login' v-else>
 
           <form id="loginform">
+            <span id="uandpwdnotmatch" v-if="user_pwd_not_match">UserId and Password do not match</span>
                 
-            <label for="userid">UserId</label>
-            <input type="text" class="form-control" id="userid" required tabindex="1" v-model.lazy="userid" placeholder="UserId">
+            <!-- <label for="userid">UserId</label> -->
+            <input type="text" v-bind:class="[userid_highlight ? 'uid_high' : '']" id="userid" required tabindex="1" v-model.lazy="userid" placeholder="UserId or Email">
               
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" required tabindex="1" v-model.lazy="password" placeholder="Password">
+            <!-- <label for="password">Password</label> -->
+            <input type="password" v-bind:class="[password_highlight ? 'pwd_high' : '']" id="password" required tabindex="1" v-model.lazy="password" placeholder="Password">
               
             <button tabindex="1" id="login-submit" type="submit" class="btn btn-success" @click="signIn">Sign in</button>
 
@@ -46,8 +48,6 @@
         
       </section>
 
-
-      
       <router-view v-bind:is-logged-in="isLoggedIn" v-bind:id="id" v-bind:cnt="cnt"></router-view>
       
       <div id='menu-outer'>
@@ -88,7 +88,10 @@ export default {
       cnt: 0,
       waiting: false,
       bkClass: 'bk',
-      blurClass: 'blur'
+      blurClass: 'blur',
+      userid_highlight: false,
+      password_highlight: false,
+      user_pwd_not_match: false
     }
   },
   components: {
@@ -176,6 +179,10 @@ export default {
           this.isLoggedIn = false
           this.password = ''
           this.id = ''
+          this.user_pwd_not_match = true
+          setTimeout(function () {
+            this.user_pwd_not_match = false
+          }.bind(this), 2000)
           this.$router.push('/')
         }
         return this.isLoggedIn
@@ -187,6 +194,20 @@ export default {
     signIn: function (event) {
       event.preventDefault()
       if (this.waiting) {
+        return
+      }
+      if (this.userid == '') {
+        this.userid_highlight = true
+        setTimeout(function () {
+          this.userid_highlight = false
+        }.bind(this), 200)
+        return
+      }
+      if (this.password == '') {
+        this.password_highlight = true
+        setTimeout(function () {
+          this.password_highlight = false
+        }.bind(this), 200)
         return
       }
       console.log('signin = ' + this.userid + ',' + this.password)
@@ -249,262 +270,214 @@ export default {
     checkLogin: function () {
       return this.isLoggedIn
     }
-  },
-  watch: {
-
   }
 }
 </script>
 
 <style>
-/* #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-} */
-#container {
-    display: block;
-    width: 100%;
-    /* max-width: 1345px; */
-    margin: 0 0;
-    padding: 0 0;
-    background: #ffffff;
-  }
-  
-  @media only screen and (max-width:1345px) {
-    #container {
-        width: 1345px;
-        /* margin: 0 3%; */
-    }
-  }
-
-  #logoutform, #searchform {
-    margin: 0px 0 5px 10px;
-    text-align: right;
-}
-
-#search {
-    line-height: 16px;
-    font-weight: 400;
-    color: rgba(0,0,0,0.85);
-    font-size: 13px;
-    display: inline-block;
-    width: 216px;
-    height: 32px;
-    margin: 10px 8px 10px 0;
-    padding: 0 10px;
-    /* background: #f3f6f8; */
-    background: #d6d9dd;
-    /* border: 1px solid #b3b6b9; */
-    /* border: 1px solid #d6d9dd; */
-    /* border-radius: 2px; */
-}
-
-#logout-submit, #profile-submit {
-    line-height: 24px;
-    /* color: #fff; */
-    color: #d6d9dd;
-    font-size: 17px;
-    font-weight: 400;
-    display: inline-block;
-    width: auto;
-    height: 32px;
-    margin: 10px 10px 0 10px;
-    padding: 0 20px;
-    background-color: transparent;
-    /* border: 1px solid #fff; */
-    /* border: 1px solid d6d9dd ; */
-    /* border-radius: 2px; */
+#app {
+    position: relative !important;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
 }
 
 .header {
     display: inline-block;
     width: 100%;
-    font-size: 0;
-    line-height: 0;
-    margin: 0 auto;
-    padding: 0;
     background: #2f94a1;
-    color: #ffffff;
 }
 
-.header #login #searchform {
-    width: 30%;
+.header .logoSection {
+    width: 12%;
     float: left;
 }
 
-.header #login #logout {
-    width: 65%;
-    float: right;
+#logo {
+    font-weight: 700;
+    font-size: 25px;
+    line-height: 35px;
+    margin: 10px 0 10px 10px;
+    display: inline-block;
+    float: left;
 }
 
 .header #login {
-    width: 90%;
+    width: 85%;
     float: right;
 }
 
-#logout-submit {
-    width: 10%;
-    float: right;
-    /*margin: 0 10px 0 0;*/
+.header #login #searchform {
+    width: 20%;
+    float: left;
 }
 
-/* .header #login #searchform {
-    width: 50%;
-    float: right;
+.header #login #searchform input {
+    display: inline-block;
+    width: 100%;
+    line-height: 16px;
+    font-weight: 400;
+    font-size: 13px;
+    height: 35px;
+    margin: 10px 0 10px 0;
+    padding: 0 10px;
+    background: #d6d9dd;
 }
 
 .header #login #logout {
-    width: 50%;
+    display: inline-block;
+    width: 80%;
+    height: 55px;
     float: right;
-} */
+}
 
-  #logo {
-    font-family: 'AR CENA', sans-serif;
-    font-weight: 700;
-    font-size: 30px;
-    line-height: 35px;
-    /*color: #010000;*/
-    margin: 10px 0 5px 10px;
-    padding: 0;
-    display: block;
-    width: 90px;
-    /* color: white; */
-    color: #d6d9dd;
-    float: left;
-  }
+#logoutform {
+    height: 55px;
+    text-align: right;
+}
 
-  #logo a {
-    text-decoration: none;
-    /* color: white; */
-    color: #d6d9dd;
-  }
-
-    #menu-outer {
-    /*height: 84px;*/
-    /*background: url(images/bar-bg.jpg) repeat-x;*/
-    width: 100%;
-    font-size: 0;
-    /*line-height: 50px;*/
-    padding: 0;
-    background: #2f94a1;
-    color: #ffffff;
-  }
-  
-  #menu-outer .table ul#horizontal-list {
-    /* min-width: 696px; */
-    /* width: 100%; */
-    list-style: none;
-    padding: 20px 0 20px 0;
-    text-align: center;
-  }
-
-  #menu-outer .table ul#horizontal-list li {
-    display: inline-flex;
-    /* margin: 0 auto 0 auto; */
-    
-    /* margin: 0 0 0 50px; */
-    padding: 0 0 0 5%;
-    text-align: center;
-  }
-
-  #menu-outer .table ul#horizontal-list li a {
-    text-decoration: none;
-    color: white;
-    font-size: 15px;
-    
-  }
-
-  #menu-outer #copyright small {
-    color: black;
+#logout-submit {
     float: right;
-    font-size: 12px;
-    margin: 0 10px;
-  }
+}
 
-  #loginform {
-    margin: 0px 0 5px 10px;
+#logout-submit, #profile-submit {
+    width: 10%;
+    margin: 10px 10px 10px 10px;
+    font-size: 17px;
+    font-weight: 400;
+    display: inline-block;
+    line-height: 24px;
+    height: 35px;
+    padding: 0 20px;
+    width: auto;
+    color: #d6d9dd;
+    background-color: transparent;
+}
+
+a {
+    text-decoration: none;
+}
+
+#logo a {
+    color: #d6d9dd;
+}
+
+#loginform {
+    height: 55px;
     text-align: right;
 }
 
 #userid, #password {
+    display: inline-block;
     line-height: 16px;
     font-weight: 400;
-    color: rgba(0,0,0,0.85);
     font-size: 13px;
-    display: inline-block;
-    width: 216px;
-    height: 32px;
-    margin: 10px 8px 10px 0;
+    height: 35px;
+    margin: 10px 5px 10px 5px;
     padding: 0 10px;
-    /* background: #f3f6f8; */
     background: #d6d9dd;
-    /* border: 1px solid #b3b6b9; */
-    /* border: 1px solid #d6d9dd; */
-    /* border-radius: 2px; */
+}
+
+.uid_high, .pwd_high {
+    border-color: red
 }
 
 #login-submit {
-    line-height: 24px;
-    /* color: #fff; */
-    color: #d6d9dd;
+    width: 10%;
+    margin: 10px 5px 10px 5px;
     font-size: 17px;
     font-weight: 400;
     display: inline-block;
-    width: auto;
-    height: 32px;
-    margin: 10px 0 0;
+    line-height: 24px;
+    height: 35px;
     padding: 0 20px;
+    width: auto;
+    color: #d6d9dd;
     background-color: transparent;
-    /* border: 1px solid #fff; */
-    /* border: 1px solid d6d9dd ; */
-    /* border-radius: 2px; */
 }
 
 #loginform .link-forgot-password {
     text-decoration: none;
     background-color: transparent;
-    /* border: 0; */
-    /* vertical-align: baseline; */
     line-height: 16px;
     font-weight: 400;
     font-size: 13px;
-    /*display: flex;*/
     height: 100%;
-    /* -webkit-box-align: center; */
-    /* align-items: center; */
     color: #d6d9dd;
-    margin: 0 10px 0 20px;
-    /* box-sizing: border-box; */
+    margin: 0 10px 0 5px;
+}
+  
+#menu-outer {
+    height: 55px;
+    display: inline-block;
+    width: 100%;
+    color: #ffffff;
+}
+
+#menu-outer .table {
+    background: #2f94a1;
+    height: 55px;
+}
+  
+#menu-outer .table ul#horizontal-list {
+    display: inline-block;
+    list-style: none;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+
+#menu-outer .table ul#horizontal-list li {
+    display: inline-flex;
+    padding: 0 0 0 0;
+}
+
+#menu-outer .table ul#horizontal-list li a {
+    text-decoration: none;
+    background-color: transparent;
+    line-height: 16px;
+    font-weight: 400;
+    font-size: 18px;
+    height: 100%;
+    color: #d6d9dd;
+    margin: 20px 30px 0 30px;
+}
+
+#menu-outer #copyright small {
+    color: black;
+    float: right;
+    font-size: 12px;
+    margin: 0 10px;
+}
+
+#uandpwdnotmatch {
+    color: red;
+    font-size: 12px;
+    margin: 0 10px;
 }
 
 .modal {
-  background: transparent;
-  color: black;
-  /* padding: 20px; */
-  /*width: 200px; */
-  position: absolute;
-  margin: 300px 0 0 50%
+    background: transparent;
+    color: black;
+    position: absolute;
+    margin: 0 0 20% 50%
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.25s ease-out;
+    transition: opacity 0.25s ease-out;
 }
 
 .fade-enter, .fade-leave-to {
-  opacity: 0;
+    opacity: 0;
 }
 
 .bk {
-  transition: all 0.05s ease-out;
+    transition: all 0.05s ease-out;
 }
 
 .blur {
-  filter: blur(1px);
-  opacity: 0.4;
+    filter: blur(1px);
+    opacity: 0.4;
 }
 
 </style>

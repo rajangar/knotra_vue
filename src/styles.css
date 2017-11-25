@@ -1,0 +1,12 @@
+body {
+    min-width:1020px;
+    word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.5;
+    display: block;
+    clor: rgba(85, 157, 180, 0.333)
+}
+
+* {
+    box-sizing: border-box;
+}
