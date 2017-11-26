@@ -51,7 +51,7 @@ export default {
 
 .signup {
     display: inline-block;
-    width: 30%;
+    width: 29%;
     float:right;
     background-color: #2f94a1;
     margin: 0 0 10px 0;

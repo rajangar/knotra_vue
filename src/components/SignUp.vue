@@ -9,10 +9,10 @@
       <!-- <br>
       <input type="password" id="password" v-bind:class="[pwd_highlight ? 'pwd_high' : '']" required tabindex="1" v-model.lazy="password" placeholder="Password"> -->
       <br>
-      <section id="termsform">
+      <!-- <section id="termsform">
       <input type="checkbox" v-bind:class="[agree_highlight ? 'agree_high' : '']" id="terms" v-model="agreed">
       <label for="checkbox" id="labelTerms">Agree for <router-link to="/terms">terms and conditions</router-link></label>
-      </section>
+      </section> -->
       <button tabindex="1" id="signup-submit" type="submit" @click="signUp">Sign Up</button>
     </form>
   </div>
@@ -66,13 +66,13 @@ export default {
             }.bind(this), 200)
             return
         } */
-        if (!this.agreed) {
+        /* if (!this.agreed) {
             this.agree_highlight = true;
             setTimeout(function () {
               this.agree_highlight = false
             }.bind(this), 200)
             return
-        }
+        } */
         this.$router.push('/signuppage/' + this.firstName + '&' + this.lastName + '&' + this.email)
     }
   }
