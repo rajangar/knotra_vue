@@ -40,15 +40,13 @@ export default {
   },
   props: [
     'userid',
-    'email',
-    'isLoggedIn',
-    'verified'
+    'email'
   ],
   created () {
-    if (!this.isLoggedIn) {
+    if (!this.$cookie.get('isLoggedIn') || this.$cookie.get('isLoggedIn') != "true") {
       this.$router.push('/')
     }
-    if (this.verified) {
+    if (this.$cookie.get('verified') && this.$cookie.get('verified') == "true") {
       this.$router.push('/')
     }
   },

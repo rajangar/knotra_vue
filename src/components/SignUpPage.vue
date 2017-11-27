@@ -104,9 +104,13 @@ export default {
     VueRecaptcha
   },
   created () {
+    console.log('isLoggedIn: ' + this.$cookie.get('isLoggedIn'))
+    if (this.$cookie.get('isLoggedIn') == "true") {
+      this.$router.push('/')
+    }
     console.log('firstname: ' + this.firstName)
     if (this.firstName == undefined) {
-        this.$router.push('/')
+      this.$router.push('/')
     }
     this.fName = this.firstName
     this.lName = this.lastName

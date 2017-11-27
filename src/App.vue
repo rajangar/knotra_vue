@@ -178,11 +178,15 @@ export default {
           this.$cookie.set('userid', this.userid, 1)
           this.$cookie.set('password', this.password, 1)
           this.$cookie.set('id', this.id, 1)
+          this.$cookie.set('isLoggedIn', this.isLoggedIn, 1)
+          this.$cookie.set('verified', this.verified, 1)
           this.isLoggedIn = true
         } else {
           this.$cookie.delete('userid')
           this.$cookie.delete('password')
           this.$cookie.delete('id')
+          this.$cookie.delete('isLoggedIn')
+          this.$cookie.delete('verified')
           this.isLoggedIn = false
           this.password = ''
           this.id = ''
@@ -226,6 +230,8 @@ export default {
       this.$cookie.delete('userid')
       this.$cookie.delete('password')
       this.$cookie.delete('id')
+      this.$cookie.delete('isLoggedIn')
+      this.$cookie.delete('verified')
 
       console.log('signout = ' + this.userid + ',' + this.password)
       this.isLoggedIn = false
@@ -248,6 +254,9 @@ export default {
         console.log('Logout')
         this.$cookie.delete('userid')
         this.$cookie.delete('password')
+        this.$cookie.delete('id')
+        this.$cookie.delete('isLoggedIn')
+        this.$cookie.delete('verified')
         console.log('signout = ' + this.userid + ',' + this.password)
         this.isLoggedIn = false
         // this.userid = ''
