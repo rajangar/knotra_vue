@@ -5,6 +5,7 @@ import About from '@/components/About'
 import Search from '@/components/Search'
 import Profile from '@/components/Profile'
 import SignUpPage from '@/components/SignUpPage'
+import ConfirmEmail from '@/components/ConfirmEmail'
 import PageNotFound from '@/components/PageNotFound'
 
 Vue.use(Router)
@@ -39,6 +40,12 @@ export default new Router({
       path: '/signuppage/:firstName&:lastName&:email',
       name: 'SignUpPage',
       component: SignUpPage,
+      props: true
+    },
+    {
+      path: '/confirmemail/:userid&:email',
+      name: 'ConfirmEmail',
+      component: ConfirmEmail,
       props: true
     },
     {

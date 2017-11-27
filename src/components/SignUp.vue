@@ -38,21 +38,21 @@ export default {
   methods: {
     signUp: function (event) {
         event.preventDefault()
-        if (this.firstName == '') {
+        if (this.firstName == '' || /[^a-zA-Z0-9_@.-]/.test(this.firstName)) {
             this.fname_highlight = true;
             setTimeout(function () {
               this.fname_highlight = false
             }.bind(this), 200)
             return
         }
-        if (this.lastName == '') {
+        if (this.lastName == '' || /[^a-zA-Z0-9_@.-]/.test(this.lastName)) {
             this.lname_highlight = true;
             setTimeout(function () {
               this.lname_highlight = false
             }.bind(this), 200)
             return
         }
-        if (this.email == '') {
+        if (this.email == '' || /[^a-zA-Z0-9_@.-]/.test(this.email)) {
             this.email_highlight = true;
             setTimeout(function () {
               this.email_highlight = false

@@ -32,11 +32,11 @@
         <span id="sideMessage" v-if="uidUsed">UserId is already used</span>
         <br>
         <br>
-        <label id="labelPwd">Password:</label>
+        <label id="labelPwd">Password (more than 7 characters):</label>
         <br>
         <input type="password" v-bind:class="[password_highlight ? 'pwd_high' : '']" id="password" required tabindex="1" v-model.lazy="password" @blur="checkPassword" @focus="correctPassword">
         <span id="sideMessage" v-if="pwdEmpty">Password should not be empty</span>
-        <span id="sideMessage" v-if="!pwdFormat">Password should be more than 7 characters</span>
+        <span id="sideMessage" v-if="!pwdFormat">Password should be more than 7 characters and alphanumeric or _@.- symbols can be used</span>
         <br>
         <br>
         <label id="labelCnfPwd">Confirm Password:</label>
@@ -51,7 +51,7 @@
         <vue-recaptcha id="recaptcha" sitekey="6LeJcjoUAAAAALHJl7zs_u-V8UbnKGTbyeKhiMX6" v-on:verify="val => g_recaptcha_response = val"></vue-recaptcha>
         <span id="sideMessage" class="captchaerror" v-if="!recaptchaUsed">Recaptcha Error</span>
         <br>
-        <button tabindex="1" id="submit" type="submit" @click="submit">Submit</button>
+        <button tabindex="1" id="submit" type="submit" :disabled="wait" @click="submit">Submit</button>
     </form>
     <br>
     </div>
@@ -61,6 +61,7 @@
 <script>
 import axios from 'axios'
 import VueRecaptcha from 'vue-recaptcha'
+
 export default {
   name: 'SignUpPage',
   data () {
@@ -90,6 +91,7 @@ export default {
       cnfpwdFormat: true,
       g_recaptcha_response: '',
       recaptchaUsed: true,
+      wait: false,
       errors: []
     }
   },
@@ -143,6 +145,8 @@ export default {
       }) */
       if (!status)
         return
+      this.wait = true
+      this.$emit('setWaiting', true)
       axios.get(`http://localhost:3000/api/getEmailUser`, {
         params: {
           email: this.emaill,
@@ -152,6 +156,8 @@ export default {
           this.email_highlight = true
           this.emailUsed = true
           status = false
+          this.wait = false
+          this.$emit('setWaiting', false)
         }
         axios.get(`http://localhost:3000/api/getIdUser`, {
           params: {
@@ -162,10 +168,13 @@ export default {
             this.userid_highlight = true
             this.uidUsed = true
             status = false
+            this.wait = false
+            this.$emit('setWaiting', false)
           }
           if (!status) {
             return
           }
+          
           axios.post(`http://localhost:3000/api/addProfile`, {
               g_recaptcha_response: this.g_recaptcha_response,
               userid: this.userid,
@@ -193,14 +202,22 @@ export default {
           }).then(response2 => {
             if (response2.data.status == 'success') {
               console.log('added')
-              this.$router.push('/confirmemail')
+              this.$cookie.set('userid', this.userid, 1)
+              this.$cookie.set('password', this.password, 1)
+              this.wait = false
+              this.$emit('setWaiting', false)
+              this.$router.push('/confirmemail/' + this.userid + '&' + this.email)
             } else if (response2.data.status == 'errorcaptcha') {
+              this.wait = false
+              this.$emit('setWaiting', false)
               this.recaptchaUsed = false
               setTimeout(function () {
                 this.recaptchaUsed = true
               }.bind(this), 2000)
             }
           }).catch(e => {
+            this.wait = false
+            this.$emit('setWaiting', false)
             this.errors.push(e)
           })
         }).catch(e => {
@@ -215,7 +232,7 @@ export default {
     },
     checkFName: function () {
       console.log('Check FName')
-      if(this.fName == '') {
+      if(this.fName == '' || /[^a-zA-Z0-9_@.-]/.test(this.fName)) {
         this.fname_highlight = true
         return false  
       }
@@ -226,7 +243,7 @@ export default {
     },
     checkLName: function () {
       console.log('Check LName')
-      if(this.lName == '') {
+      if(this.lName == '' || /[^a-zA-Z0-9_@.-]/.test(this.lName)) {
         this.lname_highlight = true
         return false
       }
@@ -242,7 +259,7 @@ export default {
         this.emailEmpty = true
         return false
       }
-      if(!this.emaill.match('@') || this.emaill.match(' ')) {
+      if(!this.emaill.match('@') || this.emaill.match(' ') || /[^a-zA-Z0-9_@.-]/.test(this.emaill)) {
         console.log('Email is incorrect')
         this.email_highlight = true
         this.emailFormat = false
@@ -310,7 +327,7 @@ export default {
         this.pwdEmpty = true
         return false
       }
-      if(this.password.length < 8) {
+      if(this.password.length < 8 || /[^a-zA-Z0-9_@.-]/.test(this.password)) {
         console.log('Password is incorrect')
         this.password_highlight = true
         this.pwdFormat = false

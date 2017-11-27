@@ -1,6 +1,10 @@
 <template>
   <div id="app">
 
+  <transition name="fade">
+    <wait-circle v-if="waiting" class="modal"></wait-circle>
+  </transition>
+
   <div v-bind:class="[waiting ? blurClass : '', bkClass]">
 
     <div id='container' v-cloak v-bind="checkCookie()">
@@ -39,7 +43,7 @@
             <!-- <label for="password">Password</label> -->
             <input type="password" v-bind:class="[password_highlight ? 'pwd_high' : '']" id="password" required tabindex="1" v-model.lazy="password" placeholder="Password">
               
-            <button tabindex="1" id="login-submit" type="submit" class="btn btn-success" @click="signIn">Sign in</button>
+            <button tabindex="1" id="login-submit" type="submit" class="btn btn-success" :disabled="waiting" @click="signIn">Sign in</button>
 
             <router-link class="link-forgot-password" tabindex="1" to="/forgot-password">Forgot password?</router-link>
 
@@ -48,7 +52,8 @@
         
       </section>
 
-      <router-view v-bind:is-logged-in="isLoggedIn" v-bind:id="id" v-bind:cnt="cnt"></router-view>
+      <router-view v-bind:is-logged-in="isLoggedIn" v-bind:id="id" v-bind:cnt="cnt" v-bind:verified="verified" @setverified="val => verified = val"
+      @setWaiting="val => waiting = val"></router-view>
       
       <div id='menu-outer'>
         
@@ -66,9 +71,6 @@
       </div>
 
 </div>
-<transition name="fade">
-      <wait-circle v-if="waiting" class="modal"></wait-circle>
-      </transition>
   </div>
 </template>
 
@@ -91,7 +93,8 @@ export default {
       blurClass: 'blur',
       userid_highlight: false,
       password_highlight: false,
-      user_pwd_not_match: false
+      user_pwd_not_match: false,
+      verified: true
     }
   },
   components: {
@@ -158,12 +161,16 @@ export default {
         console.log('1au: ' + authentication)
         console.log('status: ' + JSON.stringify(response.data.status))
         console.log('id: ' + JSON.stringify(response.data.id))
+        console.log('verified: ' + JSON.stringify(response.data.verified))
         if (response.data.status == 'success') {
           authentication = true
           this.id = response.data.id
           if (this.userid.match('@')) {
             this.userid = response.data.userid
+          } else {
+            this.email = response.data.email
           }
+          this.verified = response.data.verified
         }
         console.log('2au: ' + authentication)
         console.log('4au: ' + authentication)
@@ -196,14 +203,14 @@ export default {
       if (this.waiting) {
         return
       }
-      if (this.userid == '') {
+      if (this.userid == '' || /[^a-zA-Z0-9_@.-]/.test(this.userid)) {
         this.userid_highlight = true
         setTimeout(function () {
           this.userid_highlight = false
         }.bind(this), 200)
         return
       }
-      if (this.password == '') {
+      if (this.password == '' || /[^a-zA-Z0-9_@.-]/.test(this.password)) {
         this.password_highlight = true
         setTimeout(function () {
           this.password_highlight = false
@@ -255,6 +262,11 @@ export default {
           // this.userid = ''
           // this.password = ''
         // }
+      }
+      if (this.isLoggedIn) {
+        if(!this.verified) {
+          this.$router.push('/confirmemail/' + this.userid + '&' + this.email)
+        }
       }
     },
     showProfile: function (event) {
@@ -460,7 +472,7 @@ a {
     background: transparent;
     color: black;
     position: absolute;
-    margin: 0 0 20% 50%
+    margin: 20% 0 0 50%
 }
 
 .fade-enter-active, .fade-leave-active {
