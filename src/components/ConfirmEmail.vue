@@ -40,7 +40,9 @@ export default {
   },
   props: [
     'userid',
-    'email'
+    'email',
+    'isLoggedIn',
+    'verified'
   ],
   created () {
     if (!this.$cookie.get('isLoggedIn') || this.$cookie.get('isLoggedIn') != "true") {
@@ -48,6 +50,18 @@ export default {
     }
     if (this.$cookie.get('verified') && this.$cookie.get('verified') == "true") {
       this.$router.push('/')
+    }
+  },
+  watch: {
+    isLoggedIn: function (val) {
+      console.log('cnfrmemail: logging: ' + val)
+      if (!val)
+        this.$router.push('/')
+    },
+    verified: function (val) {
+      console.log('cnfrmemail: verified: ' + val)
+      if (val)
+        this.$router.push('/')
     }
   },
   methods: {

@@ -98,14 +98,15 @@ export default {
   props: [
     'firstName',
     'lastName',
-    'email'
+    'email',
+    'isLoggedIn'
   ],
   components: {
     VueRecaptcha
   },
   created () {
     console.log('isLoggedIn: ' + this.$cookie.get('isLoggedIn'))
-    if (this.$cookie.get('isLoggedIn') == "true") {
+    if (this.$cookie.get('isLoggedIn') && this.$cookie.get('isLoggedIn') == "true") {
       this.$router.push('/')
     }
     console.log('firstname: ' + this.firstName)
@@ -115,6 +116,13 @@ export default {
     this.fName = this.firstName
     this.lName = this.lastName
     this.emaill = this.email
+  },
+  watch: {
+    isLoggedIn: function (val) {
+      console.log('SignUpPage: logging: ' + val)
+      if (val)
+        this.$router.push('/')
+    }
   },
   methods: {
     /* recaptchaResponse: function (val) {

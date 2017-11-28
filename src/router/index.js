@@ -6,6 +6,7 @@ import Search from '@/components/Search'
 import Profile from '@/components/Profile'
 import SignUpPage from '@/components/SignUpPage'
 import ConfirmEmail from '@/components/ConfirmEmail'
+import ForgotPassword from '@/components/ForgotPassword'
 import PageNotFound from '@/components/PageNotFound'
 
 Vue.use(Router)
@@ -46,6 +47,12 @@ export default new Router({
       path: '/confirmemail/:userid&:email',
       name: 'ConfirmEmail',
       component: ConfirmEmail,
+      props: true
+    },
+    {
+      path: '/forgot-password',
+      name: 'ForgotPassword',
+      component: ForgotPassword,
       props: true
     },
     {

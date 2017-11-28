@@ -10,6 +10,7 @@
     <div id='container' v-cloak v-bind="checkCookie()">
     
       <section class='header'>
+       <div class="fixedwidth">
         <section class='logoSection'>
           <h1 id='logo' v-on:click="checkCookie"><router-link :to="{ name: 'Home' }">KNOTRA</router-link></h1>
         </section>
@@ -50,13 +51,17 @@
           </form>
         </section>
         
+       </div>
       </section>
 
+      <div class="fixedwidth">
       <router-view v-bind:is-logged-in="isLoggedIn" v-bind:id="id" v-bind:cnt="cnt" v-bind:verified="verified" @setverified="val => verified = val"
       @setWaiting="val => waiting = val"></router-view>
+      </div>
       
       <div id='menu-outer'>
         
+        <div class="fixedwidth">
         <div class='table'>
           <ul id='horizontal-list'>
             <li v-on:click="checkCookie"><router-link :to="{ name: 'Home' }">Home</router-link></li>
@@ -66,6 +71,7 @@
         </div>
         
         <div id='copyright'><small>&copy; Copyright 2017, KNOTRA</small></div>
+        </div>
         </div>
       
       </div>
@@ -308,6 +314,12 @@ export default {
     display: inline-block;
     width: 100%;
     background: #2f94a1;
+    height: 59px;
+}
+
+.fixedwidth {
+    display: inline-block;
+    width: 1012px;
 }
 
 .header .logoSection {
@@ -434,9 +446,11 @@ a {
     display: inline-block;
     width: 100%;
     color: #ffffff;
+    background: #2f94a1;
 }
 
 #menu-outer .table {
+    display: inline-block;
     background: #2f94a1;
     height: 55px;
 }
@@ -481,7 +495,7 @@ a {
     background: transparent;
     color: black;
     position: absolute;
-    margin: 20% 0 0 50%
+    margin: 20% 0 0 45%;
 }
 
 .fade-enter-active, .fade-leave-active {
