@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {HTTP} from '@/backend/index.js'
 export default {
   name: 'Search',
   data () {
@@ -24,7 +24,7 @@ export default {
     this.$cookie.get('id')) {
       this.id = this.$cookie.get('id')
     }
-    axios.get(`http://localhost:3000/api/getSearchFromProfile`, {
+    HTTP.get(`getSearchFromProfile`, {
       params: {
         query: this.query,
         id: this.id
@@ -38,7 +38,7 @@ export default {
   },
   watch: {
     query: function (val) {
-      axios.get(`http://localhost:3000/api/getSearchFromProfile`, {
+      HTTP.get(`getSearchFromProfile`, {
         params: {
           query: this.query,
           id: this.id

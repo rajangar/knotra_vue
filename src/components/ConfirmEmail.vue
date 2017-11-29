@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {HTTP} from '@/backend/index.js'
 export default {
   name: 'ConfirmEmail',
   data () {
@@ -74,7 +74,7 @@ export default {
       }
       this.wait = true
       this.$emit('setWaiting', true)
-      axios.get(`http://localhost:3000/api/getVerification`, {
+      HTTP.get(`getVerification`, {
         params: {
           userid: this.userid,
           email: this.email,
@@ -82,8 +82,8 @@ export default {
         }
       }).then(response1 => {
         if (response1.data.status == 'success') {
-          var url = 'http://localhost:3000/api/setVerification?userid=' + this.userid + '&email=' + this.email + '&verified=true'
-          axios.put(url).then (response => {
+          var url = 'setVerification?userid=' + this.userid + '&email=' + this.email + '&verified=true'
+          HTTP.put(url).then (response => {
             this.$emit('setverified', true)
             this.wait = false
             this.$emit('setWaiting', false)
@@ -104,8 +104,8 @@ export default {
     reSend: function (event) {
       console.log('Resend')
       event.preventDefault()
-      var url = 'http://localhost:3000/api/resetRandom?userid=' + this.userid + '&email=' + this.email
-      axios.put(url).then (response => {
+      var url = 'resetRandom?userid=' + this.userid + '&email=' + this.email
+      HTTP.put(url).then (response => {
         console.log('response: ' + response.data)
       }).catch(e => {
         this.errors.push(e)

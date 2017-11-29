@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {HTTP} from '@/backend/index.js'
 export default {
   name: 'Profile',
   data () {
@@ -25,7 +25,7 @@ export default {
     this.$cookie.get('id')) {
       this.id = this.$cookie.get('id')
     }
-    axios.get(`http://localhost:3000/api/getProfileById`, {
+    HTTP.get(`getProfileById`, {
       params: {
         userid: this.userid,
         id: this.id
@@ -39,7 +39,7 @@ export default {
   },
   watch: {
     cnt: function (val) {
-      axios.get(`http://localhost:3000/api/getProfileById`, {
+      HTTP.get(`getProfileById`, {
         params: {
           userid: this.userid,
           id: this.id
@@ -57,7 +57,7 @@ export default {
     this.$cookie.get('id')) {
       this.id = this.$cookie.get('id')
     }
-    axios.get(`http://localhost:3000/api/getProfileById`, {
+    HTTP.get(`getProfileById`, {
       params: {
         userid: this.userid,
         id: this.id
@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     getProfileAgain: function () {
-      /* axios.get(`http://localhost:3000/api/getProfileById`, {
+      /* HTTP.get(`getProfileById`, {
         params: {
           userid: this.userid,
           id: this.id

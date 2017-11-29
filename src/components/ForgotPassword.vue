@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {HTTP} from '@/backend/index.js'
 export default {
   name: 'ForgotPassword',
   data () {
@@ -56,7 +56,8 @@ export default {
       }
       this.wait = true
       this.$emit('setWaiting', true)
-      axios.get(`http://localhost:3000/api/getPassword`, {
+      console.log('GetPassword')
+      HTTP.get(`getPassword`, {
         params: {
           email: this.email
         }

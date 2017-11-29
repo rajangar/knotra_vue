@@ -81,8 +81,9 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {HTTP} from '@/backend/index.js'
 import WaitCircle from '@/components/WaitCircle'
+
 export default {
   name: 'app',
   data () {
@@ -112,39 +113,16 @@ export default {
       this.$router.push('/search/' + this.searchQuery)
       this.searchQuery = ''
     },
-    async getUserInfo () {
-      var authentication = false
-      try {
-        const response = await axios.get(`http://localhost:3000/api/getUserById`, {
-          params: {
-            userid: this.userid,
-            password: this.password
-          }
-        })
-
-        console.log('1au: ' + authentication)
-        console.log('status: ' + JSON.stringify(response.data.status))
-        console.log('id: ' + JSON.stringify(response.data.id))
-        if (response.data.status == 'success') {
-          authentication = true
-          this.id = response.data.id
-        }
-        console.log('2au: ' + authentication)
-        return authentication
-      } catch (e) {
-        this.errors.push(e)
-      }
-    },
     async getUserOrEmailInfo () {
       if (this.userid.match('@')) {
-        return axios.get(`http://localhost:3000/api/getUserByEmail`, {
+        return HTTP.get(`getUserByEmail`, {
           params: {
             email: this.userid,
             password: this.password
           }
         })
       } else {
-        return axios.get(`http://localhost:3000/api/getUserById`, {
+        return HTTP.get(`getUserById`, {
           params: {
             userid: this.userid,
             password: this.password

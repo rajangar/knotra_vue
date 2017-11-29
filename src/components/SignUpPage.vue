@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {HTTP} from '@/backend/index.js'
 import VueRecaptcha from 'vue-recaptcha'
 
 export default {
@@ -147,19 +147,12 @@ export default {
       // axios.post(`https://www.google.com/recaptcha/api/siteverify`, {
         // secret: '6LeJcjoUAAAAAFBSIYNzcZleibkmG6HMligiKvMS',
         // response: this.g_recaptcha_response
-      /* axios.post(url
-      ).then(rsp => {
-        console.log(rsp.data)
-      }).catch(e => {
-        this.errors.push(e)
-        console.log(e)
-        status = false
-      }) */
+
       if (!status)
         return
       this.wait = true
       this.$emit('setWaiting', true)
-      axios.get(`http://localhost:3000/api/getEmailUser`, {
+      HTTP.get(`getEmailUser`, {
         params: {
           email: this.emaill,
         }
@@ -171,7 +164,7 @@ export default {
           this.wait = false
           this.$emit('setWaiting', false)
         }
-        axios.get(`http://localhost:3000/api/getIdUser`, {
+        HTTP.get(`getIdUser`, {
           params: {
             userid: this.userid,
           }
@@ -187,7 +180,7 @@ export default {
             return
           }
           
-          axios.post(`http://localhost:3000/api/addProfile`, {
+          HTTP.post(`addProfile`, {
               g_recaptcha_response: this.g_recaptcha_response,
               userid: this.userid,
               email: this.emaill,
@@ -277,7 +270,7 @@ export default {
         this.emailFormat = false
         return false
       }
-      /* axios.get(`http://localhost:3000/api/getEmailUser`, {
+      /* HTTP.get(`getEmailUser`, {
         params: {
           email: this.emaill,
         }
@@ -311,7 +304,7 @@ export default {
         this.uidFormat = false
         return false
       }
-      /* axios.get(`http://localhost:3000/api/getIdUser`, {
+      /* HTTP.get(`getIdUser`, {
         params: {
           userid: this.userid,
         }
