@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
-      <h1>Profile {{ userid }} {{ id }} </h1>
-      <h1> {{ profileInfo }} </h1>
+    <h1>Profile {{ userid }} {{ id }} </h1>
+    <h1> {{ profileInfo }} </h1>
   </div>
 </template>
 
@@ -70,19 +70,6 @@ export default {
     }) */
   },
   methods: {
-    getProfileAgain: function () {
-      /* HTTP.get(`getProfileById`, {
-        params: {
-          userid: this.userid,
-          id: this.id
-        }
-      }).then(response => {
-        this.profileInfo = JSON.stringify(response.data)
-        console.log('2-profileInfo: ' + this.profileInfo)
-      }).catch(e => {
-        this.errors.push(e)
-      }) */
-    }
   }
 }
 </script>
