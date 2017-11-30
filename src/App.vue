@@ -55,7 +55,7 @@
       </section>
 
       <div class="fixedwidth">
-      <router-view v-bind:is-logged-in="isLoggedIn" v-bind:id="id" v-bind:cnt="cnt" v-bind:verified="verified" @setverified="val => verified = val"
+      <router-view :userid="userid" v-bind:is-logged-in="isLoggedIn" v-bind:id="id" v-bind:cnt="cnt" v-bind:verified="verified" @setverified="val => verified = val"
       @setWaiting="val => waiting = val"></router-view>
       </div>
       
