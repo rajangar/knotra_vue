@@ -182,6 +182,14 @@ export default {
         }
         return this.isLoggedIn
       }).catch(e => {
+        this.$cookie.delete('userid')
+        this.$cookie.delete('password')
+        this.$cookie.delete('id')
+        this.$cookie.delete('isLoggedIn')
+        this.$cookie.delete('verified')
+        this.isLoggedIn = false
+        this.password = ''
+        this.id = ''
         this.waiting = false
         this.errors.push(e)
       })
