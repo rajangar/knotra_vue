@@ -3,14 +3,17 @@
     <h1>Profile {{ userid }} {{ id }} </h1>
     <h1> {{ profileInfo }} </h1>
     <left-pane class="leftpane" :id="id" :userid="userid" :img-data-url="imgDataUrl">
-    <button type="submit" @click="editPhoto">Edit Image</button>
+    <button id="edit" type="submit" @click="editPhoto">Edit Photo</button>
+    <button id="remove" type="submit" @click="removePhoto">Remove Photo</button>
+    <button id="save" type="submit" @click="savePhoto" :disabled="!saveEnable">Save it as your profile</button>
     <my-upload field="img"
         @crop-success="cropSuccess"
         langType="en"
         v-model="show"
 		    :width="200"
 		    :height="200"
-		    img-format="png"></my-upload>
+        :noRotate="false"
+        img-format="png"></my-upload>
     </left-pane>
     <center-pane class="centerpane"></center-pane>
   </div>
@@ -31,7 +34,8 @@ export default {
       profileInfo: [],
       errors: [],
       show: false,
-      imgDataUrl: ''
+      imgDataUrl: '',
+      saveEnable: false
     }
   },
   props: [
@@ -71,8 +75,42 @@ export default {
       })
     },
     editPhoto: function (event) {
-      event.preventDefault
+      event.preventDefault()
       this.toggleShow()
+    },
+    removePhoto: function (event) {
+      event.preventDefault()
+      this.imgDataUrl = ''
+      this.$emit('remove')
+      this.saveEnable = true
+    },
+    savePhoto: function (event) {
+      event.preventDefault()
+      this.saveEnable = false
+      if (this.imgDataUrl == '') {
+        HTTP.post ('removePicture', {
+          userid: this.userid
+        }).then(response => {
+          console.log(response.data)
+        }).catch(e => {
+          this.errors.push(e)
+        })
+        return
+      }
+      var blob = this.dataURLtoBlob(this.imgDataUrl)
+      // console.log('blob: ' + blob)
+      
+      var form = new FormData()
+      form.append('userid', this.userid)
+      form.append('avatar', blob, 'abc.png')
+      
+      const config = { headers: { 'content-type': 'multipart/form-data' } }
+      
+      HTTP.post ('savePicture', form, config).then(response => {
+        console.log(response.data)
+      }).catch(e => {
+        this.errors.push(e)
+      })
     },
     dataURLtoBlob: function (dataurl) {
       var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
@@ -88,21 +126,7 @@ export default {
 		cropSuccess(imgDataUrl, field){
 			// console.log('-------- crop success --------' + imgDataUrl + '\nfield: ' + field)
 			this.imgDataUrl = imgDataUrl
-      
-      var blob = this.dataURLtoBlob(imgDataUrl)
-      // console.log('blob: ' + blob)
-      
-      var form = new FormData()
-      form.append('userid', this.userid)
-      form.append('avatar', blob, 'abc.png')
-      
-      const config = { headers: { 'content-type': 'multipart/form-data' } }
-      
-      HTTP.post ('savePicture', form, config).then(response => {
-        console.log(response.data)
-      }).catch(e => {
-        this.errors.push(e)
-      })
+      this.saveEnable = true
 		}
   }
 }
@@ -126,5 +150,31 @@ export default {
     float:right;
     background-color: #2f94a1;
     margin: 0 20px 10px 0;
+}
+
+#edit, #remove {
+    margin: 10px 5px 0px 5px;
+    font-size: 17px;
+    font-weight: 400;
+    display: inline-block;
+    line-height: 24px;
+    height: 35px;
+    padding: 0 2px;
+    width: auto;
+    color: #d6d9dd;
+    background-color: #2f94a1;
+}
+
+#save {
+    margin: 10px 5px 10px 5px;
+    font-size: 17px;
+    font-weight: 400;
+    display: inline-block;
+    line-height: 24px;
+    height: 35px;
+    padding: 0 2px;
+    width: auto;
+    color: #d6d9dd;
+    background-color: #2f94a1;
 }
 </style>

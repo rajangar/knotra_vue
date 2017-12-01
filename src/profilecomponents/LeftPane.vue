@@ -28,6 +28,7 @@ export default {
     }
   },
   created () {
+    this.$parent.$on('remove', this.removePhoto);
     const config = {
         params: {
             userid: this.userid
@@ -35,10 +36,11 @@ export default {
         responseType: 'blob'
     };
     HTTP.get ('getAvatar', config).then(response => {
+      console.log('GetAvatar')
       var reader = new window.FileReader()
       reader.readAsDataURL(response.data)
       reader.onload = function() {
-        console.log(reader.result)
+        // console.log(reader.result)
         this.photo = reader.result
         this.photoAvailable = true
       }.bind(this)
@@ -53,6 +55,9 @@ export default {
     'imgDataUrl'
   ],
   methods: {
+    removePhoto: function () {
+      this.photoAvailable = false
+    }
   }
 }
 </script>
