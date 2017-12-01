@@ -275,6 +275,7 @@ export default {
       this.checkCookie()
       if (this.isLoggedIn) {
         this.cnt += 1
+        console.log('1cnt: ' + this.cnt)
         this.$router.push('/profile/' + this.userid)
       }
     }

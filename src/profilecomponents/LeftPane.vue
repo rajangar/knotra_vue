@@ -1,10 +1,15 @@
 <template>
   <div class="hello">
-    <div v-if="photoAvailable">
-        <img id="avatar" :src="photo" />
+    <div v-if="imgDataUrl">
+	    <img id="avatar" :src="imgDataUrl">
     </div>
     <div v-else>
+      <div v-if="photoAvailable">
+        <img id="avatar" :src="photo" />
+      </div>
+      <div v-else>
         <img id="avatar" src="../assets/man.jpg" />
+      </div>
     </div>
     <slot></slot>
   </div>
@@ -12,6 +17,7 @@
 
 <script>
 import {HTTP} from '@/backend/index.js'
+
 export default {
   name: 'LeftPane',
   data () {
@@ -43,8 +49,11 @@ export default {
   },
   props: [
     'id',
-    'userid'
-  ]
+    'userid',
+    'imgDataUrl'
+  ],
+  methods: {
+  }
 }
 </script>
 
@@ -52,8 +61,8 @@ export default {
 <style scoped>
 
 #avatar {
-    width: 50%;
-    height: 100%;
+    width: 200px;
+    height: 200px;
     margin: 20px 0 0 0;
 }
 
