@@ -7,7 +7,7 @@
 
   <div v-bind:class="[waiting ? blurClass : '', bkClass]">
 
-    <div id='container' v-cloak v-bind="checkCookie()">
+    <div id='container' v-cloak>
     
       <section class='header'>
        <div class="fixedwidth">
@@ -25,10 +25,18 @@
           </section>
 
           <section id='logout'>
-              <form id="logoutform">
-                <button tabindex="1" id="profile-submit" type="submit" class="btn btn-success" @click="showProfile">Profile</button>
-                <button tabindex="1" id="logout-submit" type="submit" class="btn btn-success" @click="signOut">Logout</button>
-              </form>
+              <div id="logoutform" tabindex="-1" @blur="showList=false">
+                <div id="profileBtn" @click="profileBtn">
+                  <img v-if="currentProfile.avatar!=''" :src="currentProfile.avatar" />
+                  <img v-else src="./assets/man.jpg" />
+                </div>
+                <div class="dropdown-content" :class="[showList ? 'showClass' : '']">
+                <!-- <button tabindex="1" id="profile-submit" type="submit" class="btn btn-success" @click="showProfile">Profile</button>
+                <button tabindex="1" id="logout-submit" type="submit" class="btn btn-success" @click="signOut">Logout</button> -->
+                <div tabindex="-1" id="profile-submit" @focus="showProfile">Profile</div>
+                <div tabindex="-1" id="logout-submit" @focus="signOut">Logout</div>
+                </div>
+              </div>
           </section>
 
         </section>
@@ -44,7 +52,7 @@
             <!-- <label for="password">Password</label> -->
             <input type="password" v-bind:class="[password_highlight ? 'pwd_high' : '']" id="password" required tabindex="1" v-model.lazy="password" placeholder="Password">
               
-            <button tabindex="1" id="login-submit" type="submit" class="btn btn-success" :disabled="waiting" @click="signIn">Sign in</button>
+            <button tabindex="1" id="login-submit" type="submit" class="btn btn-success" @click="signIn">Sign in</button>
 
             <router-link class="link-forgot-password" tabindex="1" to="/forgot-password">Forgot password?</router-link>
 
@@ -83,6 +91,7 @@
 <script>
 import {HTTP} from '@/backend/index.js'
 import WaitCircle from '@/components/WaitCircle'
+import {CurrentProfile, NewProfile} from '@/profilecomponents/ProfileInfo.js'
 
 export default {
   name: 'app',
@@ -101,13 +110,35 @@ export default {
       userid_highlight: false,
       password_highlight: false,
       user_pwd_not_match: false,
-      verified: true
+      verified: true,
+      userid2: '',
+      password2: '',
+      currentProfile: CurrentProfile,
+      newProfile: NewProfile,
+      showList: false
     }
   },
   components: {
-    waitCircle: WaitCircle
+    WaitCircle
+  },
+  watch: {
+    userid2: function (val) {
+      this.logCookie()
+    }
+  },
+  created () {
+    this.checkCookie()
+    /* this.$refs.logoutform.onblur = function() {
+      this.showList = false
+    }
+    $refs.logoutform.$watch('onblur', function(newval, oldval) {
+      this.showList = false
+    }) */
   },
   methods: {
+    toggleShowList () {
+      this.showList = !this.showList
+    },
     search: function (event) {
       event.preventDefault()
       this.$router.push('/search/' + this.searchQuery)
@@ -130,6 +161,23 @@ export default {
         })
       }
     },
+    async getProfile () {
+      return HTTP.get(`getProfileById`, {
+        params: {
+          userid: this.userid,
+          id: this.id
+        }
+      })
+    },
+    async getAvatar () {
+      const config = {
+        params: {
+          userid: this.userid
+        },
+        responseType: 'blob'
+      }
+      return HTTP.get ('getAvatar', config)
+    },
     tryLogin: function () {
       this.waiting = true
       console.log('1waiting: ' + this.waiting)
@@ -137,7 +185,7 @@ export default {
         console.log('3waiting: ' + this.waiting)
         this.waiting = false
         console.log('4waiting: ' + this.waiting)
-      }.bind(this), 5000)
+      }.bind(this), 10000)
 
       var authentication = false
       this.getUserOrEmailInfo().then(response => {
@@ -179,6 +227,34 @@ export default {
             this.user_pwd_not_match = false
           }.bind(this), 2000)
           this.$router.push('/')
+        }
+        if (this.isLoggedIn) {
+          this.getProfile().then(response => {
+            this.profileInfo = JSON.stringify(response.data)
+            console.log('5-profileInfo: ' + this.profileInfo)
+            this.currentProfile.firstName = response.data.data[0].firstname
+            this.currentProfile.lastName = response.data.data[0].lastname
+            this.currentProfile.userid = this.userid
+            this.currentProfile.email = this.email
+            this.currentProfile.id = this.id
+          }).catch(e => {
+            this.errors.push(e)
+          })
+          this.getAvatar().then(response => {
+            console.log('1.GetAvatar')
+            var reader = new window.FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function() {
+              // console.log(reader.result)
+              if (!reader.result.startsWith('data:application')) {
+                this.currentProfile.avatar = reader.result
+              } else {
+                this.currentProfile.avatar = ''
+              }
+            }.bind(this)
+          }).catch(e => {
+            this.errors.push(e)
+          })
         }
         return this.isLoggedIn
       }).catch(e => {
@@ -233,6 +309,40 @@ export default {
       this.$router.push('/')
     },
     checkCookie: function () {
+      this.userid2 = this.$cookie.get('userid')
+      this.password2 = this.$cookie.get('password')
+      if(this.isLoggedIn) {
+        this.getProfile().then(response => {
+          this.profileInfo = JSON.stringify(response.data)
+          console.log('6-profileInfo: ' + this.profileInfo)
+          this.currentProfile.firstName = response.data.data[0].firstname
+          this.currentProfile.lastName = response.data.data[0].lastname
+          this.currentProfile.userid = this.userid
+          this.currentProfile.email = this.email
+          this.currentProfile.id = this.id
+        }).catch(e => {
+          this.errors.push(e)
+        })
+
+        this.getAvatar().then(response => {
+          console.log('1.GetAvatar ')
+          var reader = new window.FileReader()
+          reader.readAsDataURL(response.data)
+          reader.onload = function() {
+            // console.log(reader.result)
+            if (!reader.result.startsWith('data:application')) {
+              this.currentProfile.avatar = reader.result
+            } else {
+              this.currentProfile.avatar = ''
+            }
+          }.bind(this)
+        }).catch(e => {
+          this.currentProfile.avatar = ''
+          this.errors.push(e)
+        })
+      }
+    },
+    logCookie: function () {
       console.log('checkCookie = ' + this.isLoggedIn + this.$cookie.get('userid') + ',' + this.$cookie.get('password'))
       if (!this.isLoggedIn && this.$cookie.get('userid') && this.$cookie.get('password')) {
         this.userid = this.$cookie.get('userid')
@@ -278,6 +388,10 @@ export default {
         console.log('1cnt: ' + this.cnt)
         this.$router.push('/profile/' + this.userid)
       }
+    },
+    profileBtn: function (event) {
+      event.preventDefault()
+      this.toggleShowList()
     }
   },
   computed: {
@@ -352,12 +466,63 @@ export default {
     float: right;
 }
 
-#logoutform {
-    height: 55px;
-    text-align: right;
+#profileBtn {
+    margin: 0 0 0 0;
+    font-size: 17px;
+    font-weight: 400;
+    display: inline-block;
+    line-height: 10px;
+    height: 10px;
+    padding: 0 0;
+    width: auto;
+    color: #d6d9dd;
+    background-color: transparent;
+    cursor: pointer;
 }
 
-#logout-submit {
+#profileBtn img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+#logoutform {
+    text-align: right;
+    position: relative;
+    display: inline-block;
+    float: right;
+    width: 25px;
+    margin: 10px 25px 0 0;
+    outline: 0px solid transparent;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    // min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    margin: 4px 0 0 -25px;
+    z-index: 1;
+}
+
+.dropdown-content div {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+.dropdown-content div:hover {
+    background-color: #f1f1f1
+}
+
+.showClass {
+    display: block;
+}
+
+/*#logout-submit {
     float: right;
 }
 
@@ -373,7 +538,7 @@ export default {
     width: auto;
     color: #d6d9dd;
     background-color: transparent;
-}
+}*/
 
 a {
     text-decoration: none;
@@ -478,12 +643,12 @@ a {
     margin: 0 10px;
 }
 
-.modal {
+/* .modal {
     background: transparent;
     color: black;
     position: absolute;
     margin: 20% 0 0 45%;
-}
+} */
 
 .fade-enter-active, .fade-leave-active {
     transition: opacity 0.25s ease-out;
@@ -498,8 +663,8 @@ a {
 }
 
 .blur {
-    filter: blur(1px);
-    opacity: 0.4;
+    filter: blur(10px);
+    opacity: 0.1;
 }
 
 </style>

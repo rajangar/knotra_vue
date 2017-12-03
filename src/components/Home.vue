@@ -1,7 +1,6 @@
 <template>
   <div class="hello">
     <div v-if="isLoggedIn">
-      <h1>Dashboard {{ id }} {{ userid }} </h1>
       <dash-board :id="id" :userid="userid"></dash-board>
     </div>
     <div id="homepage" v-else>
@@ -20,7 +19,6 @@ export default {
   name: 'Home',
   data () {
     return {
-      msg: 'Home Page'
     }
   },
   components: {
