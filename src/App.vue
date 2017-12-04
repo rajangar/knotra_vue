@@ -66,6 +66,14 @@
       <router-view :userid="userid" v-bind:is-logged-in="isLoggedIn" v-bind:id="id" v-bind:cnt="cnt" v-bind:verified="verified" @setverified="val => verified = val"
       @setWaiting="val => waiting = val"></router-view>
       </div>
+
+      <div v-if="isLoggedIn" :class="showChatWindow ? 'chatHdrHeight' : 'chatHdr0Height'" id="chatWindow">
+        <div id="chatHeader" @click="toggleChatWindow">
+          Chat
+          <div id="closeChat" v-if="showChatWindow">x</div>
+        </div>
+        <div id="persons" v-if="showChatWindow">First Person</div>
+      </div>
       
       <div id='menu-outer'>
         
@@ -115,7 +123,8 @@ export default {
       password2: '',
       currentProfile: CurrentProfile,
       newProfile: NewProfile,
-      showList: false
+      showList: false,
+      showChatWindow: false
     }
   },
   components: {
@@ -138,6 +147,10 @@ export default {
   methods: {
     toggleShowList () {
       this.showList = !this.showList
+    },
+    toggleChatWindow (event) {
+      event.preventDefault()
+      this.showChatWindow = !this.showChatWindow
     },
     search: function (event) {
       event.preventDefault()
@@ -592,7 +605,59 @@ a {
     color: #d6d9dd;
     margin: 0 10px 0 5px;
 }
-  
+
+.chatHdrHeight {
+    height: 200px;
+}
+
+.chatHdr0Height {
+    height: 25px;
+}
+
+#closeChat {
+    float: right;
+    decoration: none;
+    margin-right: 5px;
+}
+
+#chatWindow {
+    // display: none;
+    position: fixed;
+    bottom: 0px;
+    right: 50px;
+    // height: 25px;
+    // background-color: rgb(237, 239, 244);
+    width: 300px;
+    border: 1px solid rgba(29, 49, 91, .3);
+    -webkit-border-radius: 8px 8px 0px 0px !important;
+    cursor: pointer;
+    overflow: visible;
+    resize: none;
+    box-shadow: none;
+    opacity: 1;
+    background: grey;
+    z-index: 1000001;
+}
+
+#chatHeader {
+    display: inline-block;
+    float: left;
+    // margin-left: 20px;
+    vertical-align: middle;
+    width: 100%;
+    height: 25px;
+    -webkit-border-radius: 8px 8px 0px 0px !important;
+    // border: 1px solid rgba(29, 49, 91, .3);
+}
+
+#persons {
+    display: inline-block;
+    border: 1px solid rgba(29, 49, 91, .3);
+    float: left;
+    width: 100%;
+    margin-left: -1px;
+}
+ 
 #menu-outer {
     height: 55px;
     display: inline-block;
