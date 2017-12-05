@@ -8,6 +8,13 @@ import router from './router'
 // import 'bootstrap/dist/css/bootstrap.css';
 // import 'bootstrap-vue/dist/bootstrap-vue.css';
 
+// import socketio from 'socket.io'
+import VueSocketIO from 'vue-socket.io'
+
+// export const SocketInstance = socketio('http://localhost:3000')
+
+Vue.use(VueSocketIO, 'http://localhost:3000')
+
 // Vue.use(BootstrapVue);
 
 Vue.config.productionTip = false

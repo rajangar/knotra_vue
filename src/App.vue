@@ -67,14 +67,8 @@
       @setWaiting="val => waiting = val"></router-view>
       </div>
 
-      <div v-if="isLoggedIn" :class="showChatWindow ? 'chatHdrHeight' : 'chatHdr0Height'" id="chatWindow">
-        <div id="chatHeader" @click="toggleChatWindow">
-          Chat
-          <div id="closeChat" v-if="showChatWindow">x</div>
-        </div>
-        <div id="persons" v-if="showChatWindow">First Person</div>
-      </div>
-      
+      <chat-window v-if="isLoggedIn"></chat-window>
+       
       <div id='menu-outer'>
         
         <div class="fixedwidth">
@@ -99,6 +93,7 @@
 <script>
 import {HTTP} from '@/backend/index.js'
 import WaitCircle from '@/components/WaitCircle'
+import ChatWindow from '@/profilecomponents/ChatWindow'
 import {CurrentProfile, NewProfile} from '@/profilecomponents/ProfileInfo.js'
 
 export default {
@@ -128,7 +123,8 @@ export default {
     }
   },
   components: {
-    WaitCircle
+    WaitCircle,
+    ChatWindow
   },
   watch: {
     userid2: function (val) {
@@ -604,58 +600,6 @@ a {
     height: 100%;
     color: #d6d9dd;
     margin: 0 10px 0 5px;
-}
-
-.chatHdrHeight {
-    height: 200px;
-}
-
-.chatHdr0Height {
-    height: 25px;
-}
-
-#closeChat {
-    float: right;
-    decoration: none;
-    margin-right: 5px;
-}
-
-#chatWindow {
-    // display: none;
-    position: fixed;
-    bottom: 0px;
-    right: 50px;
-    // height: 25px;
-    // background-color: rgb(237, 239, 244);
-    width: 300px;
-    border: 1px solid rgba(29, 49, 91, .3);
-    -webkit-border-radius: 8px 8px 0px 0px !important;
-    cursor: pointer;
-    overflow: visible;
-    resize: none;
-    box-shadow: none;
-    opacity: 1;
-    background: grey;
-    z-index: 1000001;
-}
-
-#chatHeader {
-    display: inline-block;
-    float: left;
-    // margin-left: 20px;
-    vertical-align: middle;
-    width: 100%;
-    height: 25px;
-    -webkit-border-radius: 8px 8px 0px 0px !important;
-    // border: 1px solid rgba(29, 49, 91, .3);
-}
-
-#persons {
-    display: inline-block;
-    border: 1px solid rgba(29, 49, 91, .3);
-    float: left;
-    width: 100%;
-    margin-left: -1px;
 }
  
 #menu-outer {
