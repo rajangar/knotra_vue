@@ -17,6 +17,9 @@
 </template>
 
 <script>
+
+import {HTTP} from '@/backend/index.js'
+
 export default {
   name: 'ChatWindow',
   data () {
@@ -38,6 +41,16 @@ export default {
     },
     getMessage: function(val){
       console.log('messgae fired by the socket server: ' + val)
+    },
+    setUserActive: function (val) {
+      console.log('setUserActive: ' + val)
+
+      var url = 'setUserActive?userid=' + this.$cookie.get('userid') + '&active=' + val
+      HTTP.put (url).then(response => {
+        console.log('User Active Set')
+      }).catch(e => {
+        console.log('error')
+      })
     }
   },
   created () {
