@@ -1,0 +1,13 @@
+body {
+    min-width: 1020px;
+    word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.5;
+    display: block;
+    color: black;
+    margin: 0 0 0 0;
+}
+
+* {
+    box-sizing: border-box;
+}
