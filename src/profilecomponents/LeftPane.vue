@@ -19,14 +19,13 @@
     <h2>{{currentProfile.firstName + ' ' + currentProfile.lastName}}</h2>
     <h3>{{currentProfile.designation}}</h3>
     <table class="table">
-        <tbody>
         <tr>
-        <td class="statushdr" style="width: 60%">Status</td>
-        <td><span class="status">Active</span></td>
+        <td class="n1-n1">Status</td>
+        <td class="n1-n2">Active</td>
         </tr>
         <tr>
-        <td>User Rating</td>
-        <td>
+        <td class="n1-n1">User Rating</td>
+        <td class="n1-n2">
             <i class="star">
             </i>
             <i class="star">
@@ -40,10 +39,9 @@
         </td>
         </tr>
         <tr>
-        <td>Member Since</td>
-        <td>Jan 7, 2017</td>
+        <td class="n1-n1">Member Since</td>
+        <td class="n1-n2">Jan 7, 2017</td>
         </tr>
-        </tbody>
     </table>
     
   </div>
@@ -147,72 +145,36 @@ h3 {
 }
 
 .table {
+    margin-top: 20px;
     width: 100%;
-    max-width: 100%;
-    margin-bottom: 20px;
-    background-color: transparent;
     border-spacing: 0;
     border-collapse: collapse;
-    display: table;
-    margin-top: 20px !important;
 }
 
-tbody {
-    display: table-row-group;
-    vertical-align: middle;
-    border-color: inherit;
-}
-
-tr {
-    display: table-row;
-    vertical-align: inherit;
-    border-color: inherit;
-}
-
-td {
-    padding: 8px 15px;
-    line-height: 1.42857143;
-    vertical-align: top;
+.n1-n1 {
+    width: 50%;
+    max-width: 50%;
     border-top: 1px solid #ddd;
-    display: table-cell;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
 }
 
-.statushdr {
-    padding: 8px 15px;
-    line-height: 1.42857143;
-    vertical-align: top;
+.n1-n2 {
+    width: 50%;
+    max-width: 50%;
     border-top: 1px solid #ddd;
-}
-
-.status {
-    background-color: #5cb85c;
-    display: inline;
-    padding: .2em .6em .3em;
-    font-size: 75%;
-    font-weight: 700;
-    line-height: 1;
-    color: #fff;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: .25em;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
 }
 
 .star {
-    
+    font-family: FontAwesome;
+    font-style: normal;
+    color: orange;
 }
 
 .star:before {
     content: "\f005";
-    color: #f89c2c !important;
-    width: 1.28571429em;
-    text-align: center;
-    display: inline-block;
-    font-family: FontAwesome;
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
 }
 
 </style>

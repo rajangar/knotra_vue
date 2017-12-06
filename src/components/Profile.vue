@@ -15,7 +15,49 @@
         img-format="png"></my-upload>
     </left-pane>
     <center-pane class="centerpane">
-      Profile
+      <div class="center1">
+      <table class="about-line">
+        <tr>
+        <td><small class="about-user"><i class="fa-user"></i> ABOUT</small></td>
+        <td><a class="edit-user" @click="editMe"><i class="fa-pencil"></i> Edit</a></td>
+        </tr>
+      </table>
+      <div class="user-info">
+        <table class="user-info-table">
+          <tbody>
+            <tr>
+              <td class="n1-n1"><b>First Name:</b></td>
+              <td class="n1-n2">{{currentProfile.firstName}}</td>
+              <td class="n1-n1"><b>Last Name:</b></td>
+              <td class="n1-n2">{{currentProfile.lastName}}</td>
+            </tr>
+            <tr>
+              <td class="n1-n1"><b>Email:</b></td>
+              <td class="n1-n2">{{currentProfile.email}}</td>
+              <td class="n1-n1"><b>Country:</b></td>
+              <td class="n1-n2">Australia</td>
+            </tr>
+            <tr>
+              <td class="n1-n1"><b>City:</b></td>
+              <td class="n1-n2">Melbourne</td>
+              <td class="n1-n1"><b>Birthday:</b></td>
+              <td class="n1-n2">11 Aug, 1986</td>
+            </tr>
+            <tr>
+              <td class="n1-n1"><b>Phone:</b></td>
+              <td class="n1-n2">1234567890</td>
+            </tr>
+          </tbody>
+        </table>
+        <hr>
+        </div>
+        <table class="experience-line">
+          <tr>
+          <td class="n2-n1"><small class="experience-user"><i class="fa-exp"></i> EXPERIENCE</small></td>
+          <td class="n2-n2"><small class="education-user"><i class="fa-edu"></i> EDUCATION</small></td>
+          </tr>
+        </table>
+      </div>
     </center-pane>
   </div>
 </template>
@@ -67,6 +109,9 @@ export default {
     }
   }, */
   methods: {
+    editMe (event) {
+      event.preventDefault()
+    },
     getProfile: function () {
       HTTP.get(`getProfileById`, {
         params: {
@@ -249,4 +294,113 @@ export default {
     color: #d6d9dd;
     background-color: #2f94a1;
 } */
+
+.center1 {
+    padding: 20px !important;
+    display: inline-block;
+    width: 100%;
+}
+
+.edit-user {
+    display: inline-block;
+    float: right;
+    background-color: orange;
+    padding: 0 10px 0 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.fa-pencil {
+    font-family: FontAwesome;
+    font-style: normal;
+}
+
+.fa-pencil:before {
+    content: '\f040';
+}
+
+.about-user {
+    display: inline-block;
+    float: left;
+    font-size: 32px;
+    margin-top: 0;
+    -webkit-margin-after: 0;
+    padding: 0;
+}
+
+.about-line {
+    height: 100%;
+    width: 100%;
+}
+
+.fa-user {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-size: 32px;
+}
+
+.fa-user:before {
+    content: '\f007';
+}
+
+.user-info {
+    display: block;
+}
+
+.user-info-table {
+    width: 100%;
+}
+
+.n1-n1 {
+    width: 15%;
+    text-align: left;
+}
+
+.n1-n2 {
+    width: 35%;
+    max-width: 200px;
+    text-align: left;
+}
+
+.n2-n1 {
+    width: 50%;
+    max-width: 50%;
+    text-align: left;
+}
+
+.n2-n2 {
+    width: 50%;
+    max-width: 50%;
+    text-align: left;
+}
+
+.experience-line {
+    height: 100%;
+    width: 100%;
+}
+
+.experience-user {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-size: 32px;
+}
+
+.experience-user:before {
+    content: '\f0f6';
+}
+
+.education-line {
+    height: 100%;
+}
+
+.education-user {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-size: 32px;
+}
+
+.education-user:before {
+    content: '\f091';
+}
+
 </style>
