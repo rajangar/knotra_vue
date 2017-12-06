@@ -14,7 +14,9 @@
         :noRotate="false"
         img-format="png"></my-upload>
     </left-pane>
-    <center-pane class="centerpane"></center-pane>
+    <center-pane class="centerpane">
+      Profile
+    </center-pane>
   </div>
 </template>
 

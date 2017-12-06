@@ -2,7 +2,7 @@
   <div class="hello">
     <div id="border">
     </div>
-    <h1>{{ msg }}</h1>
+    <slot></slot>
   </div>
 </template>
 
@@ -11,7 +11,6 @@ export default {
   name: 'CenterPane',
   data () {
     return {
-      msg: 'Welcome to CenterPane Page'
     }
   }
 }

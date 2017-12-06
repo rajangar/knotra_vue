@@ -41,8 +41,8 @@ export default {
     },
     getMessage: function(val){
       console.log('messgae fired by the socket server: ' + val)
-    },
-    setUserActive: function (val) {
+    }
+    /* setUserActive: function (val) {
       console.log('setUserActive: ' + val)
 
       var url = 'setUserActive?userid=' + this.$cookie.get('userid') + '&active=' + val
@@ -51,7 +51,7 @@ export default {
       }).catch(e => {
         console.log('error')
       })
-    }
+    } */
   },
   created () {
     this.$socket.emit('register_user', this.$cookie.get('userid'))
