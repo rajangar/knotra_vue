@@ -21,7 +21,7 @@
     <table class="table">
         <tr>
         <td class="n1-n1">Status</td>
-        <td class="n1-n2">Active</td>
+        <td class="n1-n2"><small style="background-color: green; color: white; padding: 5px;">Active</small></td>
         </tr>
         <tr>
         <td class="n1-n1">User Rating</td>

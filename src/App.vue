@@ -25,10 +25,38 @@
           </section>
 
           <section id='logout'>
+              <table class="u1">
+              <td class="li2">
+                <div id="notify1" @click="showNotifications">
+                <i class="fa-con"></i>
+                <div id="numberNotify">
+                <small> {{ "9999" }} </small>
+                </div>
+                </div>
+              </td>
+              <td class="li2">
+                <div id="notify1" @click="showNotifications">
+                <i class="fa-msg"></i>
+                <div id="numberNotify">
+                <small> {{ "9999" }} </small>
+                </div>
+                </div>
+              </td>
+              <td class="li2">
+                <div id="notify1" @click="showNotifications">
+                <i class="fa-notify"></i>
+                <div id="numberNotify">
+                <small> {{ "9999" }} </small>
+                </div>
+                </div>
+              </td>
+              <td class="li1">
               <div id="logoutform" tabindex="-1" @blur="showList=false">
                 <div id="profileBtn" @click="profileBtn">
                   <img v-if="currentProfile.avatar!=''" :src="currentProfile.avatar" />
                   <img v-else src="./assets/man.jpg" />
+                  <span class="s1">{{ currentProfile.firstName.length > 12 ? currentProfile.firstName.substr(0, 9) + '...' : currentProfile.firstName }}
+                  <i class="fa-down"></i></span>
                 </div>
                 <div class="dropdown-content" :class="[showList ? 'showClass' : '']">
                 <!-- <button tabindex="1" id="profile-submit" type="submit" class="btn btn-success" @click="showProfile">Profile</button>
@@ -37,6 +65,8 @@
                 <div tabindex="-1" id="logout-submit" @focus="signOut">Logout</div>
                 </div>
               </div>
+              </td>
+              </table>
           </section>
 
         </section>
@@ -141,6 +171,9 @@ export default {
     }) */
   },
   methods: {
+    showNotifications (event) {
+      event.preventDefault()
+    },
     toggleShowList () {
       this.showList = !this.showList
     },
@@ -476,14 +509,15 @@ export default {
 }
 
 #profileBtn {
-    margin: 0 0 0 0;
+    margin: 10px 0 0 0;
     font-size: 17px;
     font-weight: 400;
     display: inline-block;
     line-height: 10px;
-    height: 10px;
+    //height: 10px;
     padding: 0 0;
     width: auto;
+    // height: 100%;
     color: #d6d9dd;
     background-color: transparent;
     cursor: pointer;
@@ -491,8 +525,105 @@ export default {
 
 #profileBtn img {
   border-radius: 50%;
+  margin: 0 0 0 0;
   width: 40px;
   height: 40px;
+  display: inline-block;
+  // float: left;
+}
+
+.s1 {
+    display: inline-block;
+    // float: right;
+    // height: 100%;
+    margin: -30px 0 0 5px;
+    vertical-align: middle;
+}
+
+.fa-down {
+    font-family: FontAwesome;
+    font-style: normal;
+    color: white;
+    margin-left: 5px;
+}
+
+.fa-down:before {
+    content: "\f0d7";
+}
+
+#notify1 {
+    width: 36px;
+    height: 36px;
+    position: relative;
+    border: 2px solid #EEE;
+    border-radius: 30px;
+    margin: 12px 15px 0 0;
+    cursor: pointer;
+}
+
+#notify1:hover {
+    background-color: white;
+}
+
+.fa-con {
+    font-family: FontAwesome;
+    font-style: normal;
+    position: absolute;
+    right: 5px;
+    top: 2px;
+    font-size: 20px;
+    // margin-right: 40px;
+}
+
+.fa-con:before {
+    content: "\f0c0";
+}
+
+.fa-msg {
+    font-family: FontAwesome;
+    font-style: normal;
+    position: absolute;
+    right: 6px;
+    top: 1px;
+    font-size: 20px;
+    // margin-right: 40px;
+}
+
+.fa-msg:before {
+    content: "\f0e0";
+}
+
+.fa-notify {
+    font-family: FontAwesome;
+    font-style: normal;
+    position: absolute;
+    right: 5px;
+    top: -2px;
+    font-size: 24px;
+    // margin-right: 40px;
+}
+
+.fa-notify:before {
+    content: "\f0ac";
+}
+
+#numberNotify {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    background-color: orange;
+    border-radius: 10px;
+    margin: -9px 0 0 20px;
+    color: white;
+    font-size: 9px;
+    cursor: pointer;
+}
+
+#numberNotify small {
+    // position: absolute;
+    display: inline-block;
+    margin-top: 4px;
+    text-align: center;
 }
 
 #logoutform {
@@ -500,8 +631,10 @@ export default {
     position: relative;
     display: inline-block;
     float: right;
-    width: 25px;
-    margin: 10px 25px 0 0;
+    max-width: 200px;
+    width: auto;
+    height: 100%;
+    margin: 0 25px 0 0;
     outline: 0px solid transparent;
 }
 
@@ -511,11 +644,15 @@ export default {
     background-color: #f9f9f9;
     // min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    margin: 4px 0 0 -25px;
-    z-index: 1;
+    margin: 5px 0 0 0;
+    right: 0px;
+    z-index: 5;
+    width: 75px;
+    float: right;
 }
 
 .dropdown-content div {
+    // width: 100px;
     color: black;
     padding: 12px 16px;
     text-decoration: none;
@@ -548,6 +685,30 @@ export default {
     color: #d6d9dd;
     background-color: transparent;
 }*/
+
+.u1 {
+    display: inline-block;
+    float: right;
+    // list-style-type: disc;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    width: auto;
+}
+
+.li1 {
+    display: inline-block;
+    // list-style: none;
+    width: auto;
+    height: 100%;
+}
+
+.li2 {
+    display: inline-block;
+    // list-style: none;
+    width: auto;
+    height: 100%;
+}
 
 a {
     text-decoration: none;
