@@ -18,10 +18,17 @@
         <section id='login' v-if="checkLogin">
                   
           <section id="searchform">
-            <!-- <form>
-              <label for="search">Search</label> -->
-              <input type="text" class="search-control" id="search" required tabindex="1" placeholder="search" v-model.lazy="searchQuery" @keyup.enter="search">
-            <!-- </form> -->
+            <input type="text" class="search-control" id="search" placeholder="Search" v-model.lazy="searchQuery" @keyup.enter="search">
+            <span class="sep"></span>
+            <span class="searchCat" tabindex="-1" @blur="showList1=false" @click="searchCategory">Category<i class="fa-down-1"></i></span>
+            
+            <span class="searchSpan">
+              <i class="fa-search"></i>
+            </span>
+            <div class="dropdown-content-1" :class="[showList1 ? 'showClass1' : '']">
+              <div tabindex="-1" id="profile-submit" @focus="showProfile">Helper</div>
+              <div tabindex="-1" id="logout-submit" @focus="signOut">Helpee</div>
+            </div>
           </section>
 
           <section id='logout'>
@@ -149,6 +156,7 @@ export default {
       currentProfile: CurrentProfile,
       newProfile: NewProfile,
       showList: false,
+      showList1: false,
       showChatWindow: false
     }
   },
@@ -176,6 +184,9 @@ export default {
     },
     toggleShowList () {
       this.showList = !this.showList
+    },
+    toggleShowList1 () {
+      this.showList1 = !this.showList1
     },
     toggleChatWindow (event) {
       event.preventDefault()
@@ -434,6 +445,10 @@ export default {
     profileBtn: function (event) {
       event.preventDefault()
       this.toggleShowList()
+    },
+    searchCategory: function (event) {
+      event.preventDefault()
+      this.toggleShowList1()
     }
   },
   computed: {
@@ -474,7 +489,7 @@ export default {
     font-weight: 700;
     font-size: 25px;
     line-height: 35px;
-    margin: 10px 0 10px 10px;
+    margin: 13px 0 10px 10px;
     display: inline-block;
     float: left;
 }
@@ -485,25 +500,118 @@ export default {
 }
 
 .header #login #searchform {
-    width: 20%;
+    width: 30%;
     float: left;
+    border-radius: 30px;
+    outline: 0px solid transparent;
+    padding-left: 13px;
+    margin-top: 15px;
+    position: relative;
+    display: block;
+    height: 30px;
+    background: #d6d9dd;
 }
 
 .header #login #searchform input {
     display: inline-block;
-    width: 100%;
+    float: left;
+    width: 53%;
     line-height: 16px;
     font-weight: 400;
     font-size: 13px;
-    height: 35px;
-    margin: 10px 0 10px 0;
-    padding: 0 10px;
+    height: 30px;
+    // margin: 0px 0 10px 0;
+    // padding: 0 10px;
     background: #d6d9dd;
+    border: 0px solid transparent;
+    outline: 0px solid transparent;
+}
+
+.sep {
+    display: inline-block;
+    float: left;
+    height: 25px;
+    margin-top: 3px;
+    border-left: 1px dotted black;
+}
+
+.searchCat {
+    display: inline-block;
+    float: left;
+    font-size: 13px;
+    margin: 6px 0 0 8px;
+    cursor: pointer;
+    outline: 0px solid transparent;
+}
+
+.fa-down-1 {
+    // display: inline-block;
+    // float: left;
+    margin: 6px 0 0 8px;
+    font-family: FontAwesome;
+    font-style: normal;
+}
+
+.fa-down-1:after {
+    content: "\f0d7";
+}
+
+.searchSpan {
+    display: inline-block;
+    float: right;
+    height: 30px;
+    width: 28px;
+    border-radius: 30px;
+    background-color: black;
+    cursor: pointer;
+}
+
+.fa-search {
+    display: inline-block;
+    float: right;
+    margin: 4px 7px 0 0;
+    font-family: FontAwesome;
+    font-style: normal;
+    color: white;
+}
+
+.fa-search:before {
+    content: "\f002";
+}
+
+.dropdown-content-1 {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    // min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    margin: 30px 0 0 0;
+    left: 150px;
+    z-index: 5;
+    width: 80px;
+    float: right;
+}
+
+.dropdown-content-1 div {
+    // width: 100px;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+.dropdown-content-1 div:hover {
+    background-color: #f1f1f1
+}
+
+.showClass1 {
+    display: block;
 }
 
 .header #login #logout {
     display: inline-block;
-    width: 80%;
+    width: 70%;
     height: 55px;
     float: right;
 }
