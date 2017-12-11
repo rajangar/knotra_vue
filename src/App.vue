@@ -61,7 +61,7 @@
               <div id="logoutform" tabindex="-1" @blur="showList=false">
                 <div id="profileBtn" @click="profileBtn">
                   <img v-if="currentProfile.avatar!=''" :src="currentProfile.avatar" />
-                  <img v-else src="./assets/man.jpg" />
+                  <img v-else src="./assets/avatar.png" />
                   <span class="s1">{{ currentProfile.firstName.length > 12 ? currentProfile.firstName.substr(0, 9) + '...' : currentProfile.firstName }}
                   <i class="fa-down"></i></span>
                 </div>
@@ -242,7 +242,7 @@ export default {
 
       var authentication = false
       this.getUserOrEmailInfo().then(response => {
-        this.waiting = false
+        
         console.log('1au: ' + authentication)
         console.log('status: ' + JSON.stringify(response.data.status))
         console.log('id: ' + JSON.stringify(response.data.id))
@@ -260,12 +260,12 @@ export default {
         console.log('2au: ' + authentication)
         console.log('4au: ' + authentication)
         if (authentication) {
+          this.isLoggedIn = true
           this.$cookie.set('userid', this.userid, 1)
           this.$cookie.set('password', this.password, 1)
           this.$cookie.set('id', this.id, 1)
           this.$cookie.set('isLoggedIn', this.isLoggedIn, 1)
           this.$cookie.set('verified', this.verified, 1)
-          this.isLoggedIn = true
         } else {
           this.$cookie.delete('userid')
           this.$cookie.delete('password')
@@ -294,6 +294,7 @@ export default {
             this.errors.push(e)
           })
           this.getAvatar().then(response => {
+            this.waiting = false
             console.log('1.GetAvatar')
             var reader = new window.FileReader()
             reader.readAsDataURL(response.data)
@@ -306,6 +307,7 @@ export default {
               }
             }.bind(this)
           }).catch(e => {
+            this.waiting = false
             this.errors.push(e)
           })
         }
@@ -344,7 +346,7 @@ export default {
       }
       console.log('signin = ' + this.userid + ',' + this.password)
       this.tryLogin()
-      this.$router.push('/')
+      // this.$router.push('/')
     },
     signOut: function (event) {
       event.preventDefault()
@@ -364,6 +366,14 @@ export default {
     checkCookie: function () {
       this.userid2 = this.$cookie.get('userid')
       this.password2 = this.$cookie.get('password')
+      if (this.isLoggedIn) {
+        if(!this.verified) {
+          console.log('check verified: ' + this.verified + this.userid + this.email)
+          this.$router.push('/confirmemail/' + this.userid + '&' + this.email)
+          this.waiting = false
+          return
+        }
+      }
       if(this.isLoggedIn) {
         this.getProfile().then(response => {
           this.profileInfo = JSON.stringify(response.data)
@@ -426,11 +436,6 @@ export default {
           // this.userid = ''
           // this.password = ''
         // }
-      }
-      if (this.isLoggedIn) {
-        if(!this.verified) {
-          this.$router.push('/confirmemail/' + this.userid + '&' + this.email)
-        }
       }
     },
     showProfile: function (event) {

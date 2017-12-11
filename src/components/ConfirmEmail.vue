@@ -45,6 +45,7 @@ export default {
     'verified'
   ],
   created () {
+    console.log('ConfirmEmail' + this.$cookie.get('verified') + this.$cookie.get('isLoggedIn'))
     if (!this.$cookie.get('isLoggedIn') || this.$cookie.get('isLoggedIn') != "true") {
       this.$router.push('/')
     }

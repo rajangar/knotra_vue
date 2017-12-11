@@ -10,7 +10,7 @@
         <img id="avatar" :src="photo" />
       </div>
       <div v-else>
-        <img id="avatar" src="../assets/man.jpg" />
+        <img id="avatar" src="../assets/avatar.png" />
       </div>
     </div>
     
