@@ -27,13 +27,13 @@
           <tbody>
             <tr>
               <td class="n1-n1"><b>First Name:</b></td>
-              <td class="n1-n2">{{currentProfile.firstName}}</td>
+              <td class="n1-n2">{{firstName}}</td>
               <td class="n1-n1"><b>Last Name:</b></td>
-              <td class="n1-n2">{{currentProfile.lastName}}</td>
+              <td class="n1-n2">{{lastName}}</td>
             </tr>
             <tr>
               <td class="n1-n1"><b>Email:</b></td>
-              <td class="n1-n2">{{currentProfile.email}}</td>
+              <td class="n1-n2">{{email}}</td>
               <td class="n1-n1"><b>Country:</b></td>
               <td class="n1-n2">Australia</td>
             </tr>
@@ -82,6 +82,7 @@ export default {
       saveEnable: false,
       firstName: '',
       lastName: '',
+      email: '',
       currentProfile: CurrentProfile,
       newProfile: NewProfile
     }
@@ -96,18 +97,25 @@ export default {
     CenterPane,
     myUpload
   },
-  /* created () {
-    this.getProfile()
+  created () {
+    console.log('11currentprofile: ' + JSON.stringify(this.currentProfile))
+    if (this.userid != this.currentProfile.userid) {
+      this.getProfile()
+    } else {
+      this.firstName = this.currentProfile.firstName
+      this.lastName = this.currentProfile.lastName
+      this.email = this.currentProfile.email
+    }
   },
   watch: {
-    id: function (val) {
+    /*id: function (val) {
       this.getProfile()
     },
     cnt: function (val) {
       console.log('cnt: ' + this.cnt)
       this.getProfile()
-    }
-  }, */
+    }*/
+  },
   methods: {
     editMe (event) {
       event.preventDefault()
@@ -122,6 +130,7 @@ export default {
         this.profileInfo = JSON.stringify(response.data)
         this.firstName = response.data.data[0].firstname
         this.lastName = response.data.data[0].lastname
+        this.email = response.data.data[0].email
         console.log('4-profileInfo: ' + this.profileInfo)
       }).catch(e => {
         this.errors.push(e)

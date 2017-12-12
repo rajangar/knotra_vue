@@ -167,6 +167,16 @@ export default {
   watch: {
     userid2: function (val) {
       this.logCookie()
+    },
+    isLoggedIn: function (val) {
+      if (val) {
+        if(!this.verified) {
+          console.log('check verified: ' + this.verified + this.userid + this.email)
+          this.waiting = false
+          this.$router.push('/confirmemail/' + this.userid + '&' + this.email)
+          return
+        }
+      }
     }
   },
   created () {
@@ -369,8 +379,8 @@ export default {
       if (this.isLoggedIn) {
         if(!this.verified) {
           console.log('check verified: ' + this.verified + this.userid + this.email)
-          this.$router.push('/confirmemail/' + this.userid + '&' + this.email)
           this.waiting = false
+          this.$router.push('/confirmemail/' + this.userid + '&' + this.email)
           return
         }
       }
@@ -442,9 +452,11 @@ export default {
       event.preventDefault()
       this.checkCookie()
       if (this.isLoggedIn) {
-        this.cnt += 1
-        console.log('1cnt: ' + this.cnt)
-        this.$router.push('/profile/' + this.userid)
+        if(this.verified) {
+          this.cnt += 1
+          console.log('1cnt: ' + this.cnt)
+          this.$router.push('/profile/' + this.userid)
+        }
       }
     },
     profileBtn: function (event) {
