@@ -117,6 +117,7 @@ export default {
     this.$watch('currentProfile.userid', function(newVal, oldVal) {
       console.log('33currentprofile: ' + JSON.stringify(this.currentProfile))
       if (this.userid != this.currentProfile.userid) {
+        console.log('11getProfile')
         this.getProfile()
       } else {
         this.firstName = this.currentProfile.firstName
@@ -142,9 +143,10 @@ export default {
         this.profileInfo = JSON.stringify(response.data)
         this.firstName = response.data.data[0].firstname
         this.lastName = response.data.data[0].lastname
-        this.email = response.data.data[0].email
+        //this.email = response.data.data[0].email
         console.log('4-profileInfo: ' + this.profileInfo)
       }).catch(e => {
+        console.log('11error')
         this.errors.push(e)
       })
       const config = {
