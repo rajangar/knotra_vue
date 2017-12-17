@@ -2,10 +2,11 @@
   <div class="hello">
     <left-pane class="leftpane" :id="id" :userid="userid" :img-data-url="imgDataUrl"
     :first-name="firstName" :last-name="lastName">
-    <button id="edit" type="submit" @click="editPhoto">Edit Photo</button>
-    <button id="remove" type="submit" @click="removePhoto">Remove Photo</button>
-    <button id="save" type="submit" @click="savePhoto" :disabled="!saveEnable">Save it as your profile</button>
-    <my-upload field="img"
+    <div v-if="sameProfile">
+      <button id="edit" type="submit" @click="editPhoto">Edit Photo</button>
+      <button id="remove" type="submit" @click="removePhoto">Remove Photo</button>
+      <button id="save" type="submit" @click="savePhoto" :disabled="!saveEnable">Save it as your profile</button>
+      <my-upload field="img"
         @crop-success="cropSuccess"
         langType="en"
         v-model="show"
@@ -13,13 +14,17 @@
 		    :height="150"
         :noRotate="false"
         img-format="png"></my-upload>
+    </div>
+
+    <h2>{{firstName + ' ' + lastName}}</h2>
+    <h3>{{designation}}</h3>
     </left-pane>
     <center-pane class="centerpane">
       <div class="center1">
       <table class="about-line">
         <tr>
         <td><small class="about-user"><i class="fa-user"></i> ABOUT</small></td>
-        <td><a class="edit-user" @click="editMe"><i class="fa-pencil"></i> Edit</a></td>
+        <td v-if="sameProfile"><a class="edit-user" @click="editMe"><i class="fa-pencil"></i> Edit</a></td>
         </tr>
       </table>
       <div class="user-info">
@@ -82,9 +87,11 @@ export default {
       saveEnable: false,
       firstName: '',
       lastName: '',
+      designation: '',
       email: '',
       currentProfile: CurrentProfile,
-      newProfile: NewProfile
+      newProfile: NewProfile,
+      sameProfile: false
     }
   },
   props: [
@@ -105,16 +112,21 @@ export default {
       this.firstName = this.currentProfile.firstName
       this.lastName = this.currentProfile.lastName
       this.email = this.currentProfile.email
+      this.sameProfile = true
     }
+    this.$watch('currentProfile.userid', function(newVal, oldVal) {
+      console.log('33currentprofile: ' + JSON.stringify(this.currentProfile))
+      if (this.userid != this.currentProfile.userid) {
+        this.getProfile()
+      } else {
+        this.firstName = this.currentProfile.firstName
+        this.lastName = this.currentProfile.lastName
+        this.email = this.currentProfile.email
+        this.sameProfile = true
+      }
+    })
   },
   watch: {
-    /*id: function (val) {
-      this.getProfile()
-    },
-    cnt: function (val) {
-      console.log('cnt: ' + this.cnt)
-      this.getProfile()
-    }*/
   },
   methods: {
     editMe (event) {
@@ -133,6 +145,29 @@ export default {
         this.email = response.data.data[0].email
         console.log('4-profileInfo: ' + this.profileInfo)
       }).catch(e => {
+        this.errors.push(e)
+      })
+      const config = {
+        params: {
+          userid: this.userid
+        },
+        responseType: 'blob'
+      }
+      HTTP.get ('getAvatar', config).then(response => {
+        // this.waiting = false
+        console.log('5.GetAvatar')
+        var reader = new window.FileReader()
+        reader.readAsDataURL(response.data)
+        reader.onload = function() {
+          // console.log(reader.result)
+          if (!reader.result.startsWith('data:application')) {
+            this.imgDataUrl = reader.result
+          } else {
+            this.imgDataUrl = 'empty'
+          }
+        }.bind(this)
+      }).catch(e => {
+        // this.waiting = false
         this.errors.push(e)
       })
     },

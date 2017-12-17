@@ -3,7 +3,12 @@
     <div id="border">
     </div>
     <div v-if="imgDataUrl">
-	    <img id="avatar" :src="imgDataUrl">
+      <div v-if="imgDataUrl == 'empty'">
+        <img id="avatar" src="../assets/avatar.png" />
+      </div>
+      <div v-else>
+	      <img id="avatar" :src="imgDataUrl">
+      </div>
     </div>
     <div v-else>
       <div v-if="photoAvailable">
@@ -16,8 +21,7 @@
     
     <slot></slot>
 
-    <h2>{{currentProfile.firstName + ' ' + currentProfile.lastName}}</h2>
-    <h3>{{currentProfile.designation}}</h3>
+    
     <table class="table">
         <tr>
         <td class="n1-n1">Status</td>
@@ -106,13 +110,18 @@ export default {
     })
   },
   watch: {
+    imgDataUrl: function (newVal) {
+      console.log('Avatar changed from profile')
+    }
     /* photo: function (newVal) {
     } */
   },
   props: [
     'id',
     'userid',
-    'imgDataUrl'
+    'imgDataUrl',
+    'firstName',
+    'lastName'
   ],
   methods: {
     removePhoto: function () {

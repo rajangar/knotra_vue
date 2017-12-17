@@ -478,7 +478,8 @@ export default {
               this.$cookie.set('password', this.password, 1)
               this.wait = false
               this.$emit('setWaiting', false)
-              this.$router.push('/confirmemail/' + this.userid + '&' + this.email)
+              this.$router.push('/')
+              // this.$router.push('/confirmemail/' + this.userid + '&' + this.email)
             } else if (response2.data.status == 'errorcaptcha') {
               this.wait = false
               this.$emit('setWaiting', false)

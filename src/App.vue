@@ -101,7 +101,7 @@
 
       <div class="fixedwidth">
       <router-view :userid="userid" v-bind:is-logged-in="isLoggedIn" v-bind:id="id" v-bind:cnt="cnt" v-bind:verified="verified" @setverified="val => verified = val"
-      @setWaiting="val => waiting = val"></router-view>
+      @setWaiting="setWait('val')"></router-view>
       </div>
 
       <chat-window v-if="isLoggedIn"></chat-window>
@@ -179,8 +179,11 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     this.checkCookie()
+  },
+  created () {
+    // this.checkCookie()
     /* this.$refs.logoutform.onblur = function() {
       this.showList = false
     }
@@ -189,6 +192,10 @@ export default {
     }) */
   },
   methods: {
+    setWait (val) {
+      this.checkCookie()
+      this.waiting = val
+    },
     showNotifications (event) {
       event.preventDefault()
     },

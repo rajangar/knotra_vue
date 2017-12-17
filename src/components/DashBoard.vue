@@ -1,6 +1,10 @@
 <template>
   <div class="hello">
-    <left-pane class="leftpane" :id="id" :userid="userid"></left-pane>
+    <left-pane class="leftpane" :id="id" :userid="userid">
+      <h2>{{currentProfile.firstName + ' ' + currentProfile.lastName}}</h2>
+      <h3>{{currentProfile.designation}}</h3>
+    </left-pane>
+
     <center-pane class="centerpane"></center-pane>
   </div>
 </template>
